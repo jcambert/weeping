@@ -1,0 +1,7 @@
+{
+    "endpoint": "http://www.fftt.com",
+    "api":{
+        "endpoint": "/mobile/pxml/xml_{0}.php",
+        "club_departement":"dep2"
+    }
+}
