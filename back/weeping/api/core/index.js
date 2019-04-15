@@ -44,7 +44,7 @@ weep.load = function(){
         } catch (e) {
             sails.log.warn('weeping:Cannot parse package.json');
         }
-<<<<<<< HEAD
+
         var fb =require('./firebase/index.js');
        
         console.log(sails.config.datastores.weeping);
@@ -58,12 +58,6 @@ weep.load = function(){
         })
         weep.spid=require("./fftt/index.js");
 
-=======
-       /* var database =require('./firebase/index.js').db();
-        console.log(database);
-        weep.db = database;
-        weep.debug(weep.db);*/
->>>>>>> 2371d0df73da537b254fe99e8cf4c9ae6b7281e0
         // Weeping modules contains all public methods of hooks
         weep.modules = sails.hooks;
         return resolve();

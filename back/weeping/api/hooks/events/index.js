@@ -44,12 +44,8 @@ module.exports = function defineEventsHook(app) {
             ._callbacks[method] = setupEvent(app, evt);
             //.push(setupEvent(app, evt))
           }
-<<<<<<< HEAD
-         // sails.log.debug(app.models[model]);
-=======
-          //sails.log.debug("Hook for model "+model);
-          //sails.log.debug(app.models[model]);
->>>>>>> 2371d0df73da537b254fe99e8cf4c9ae6b7281e0
+
+
         }
       });
 
