@@ -10,9 +10,9 @@ export default [
                 text: "Vous etes loggé<br>Bonjour "+ user.licencie.prenom
             };
             setTimeout(() => {
-                ApplicationModule.setUser(user.licencie);
-                if(user.info)
-                    ApplicationModule.setUserInfo(user.info);
+                //ApplicationModule.setUser(user.licencie);
+                //if(user.info)
+                //    ApplicationModule.setUserInfo(user.info);
 
                 this.$router.push({ path: 'dashboard' });
             }, 1000);

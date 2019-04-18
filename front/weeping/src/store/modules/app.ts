@@ -1,7 +1,7 @@
 
 import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorators'
 import store from '..'
-
+import {userService} from '@/services/user'
 export interface IAppState {
 
     user_:User |undefined,
@@ -32,6 +32,33 @@ export class ApplicationStore extends VuexModule implements IAppState{
     
     user_: User | undefined;
     userinfo_: UserInfo |undefined
+    loading:boolean=false
+    error=null
+
+    @Mutation
+    SET_LOADING(value:boolean){
+        this.loading=value
+    }
+
+    @Action({commit:'SET_LOADING'})
+    setLoading(value:boolean){
+        return value;
+    }
+
+    @Mutation
+    SET_ERROR(value:any){
+        this.error=value;
+    }
+
+    @Action({commit:'SET_ERROR'})
+    setError(value:any){
+        return value
+    }
+
+    @Action({commit:'SET_ERROR'})
+    clearError(){
+        return null
+    }
     @Mutation
     SET_USER(value:User){
         this.user_=value
@@ -59,6 +86,24 @@ export class ApplicationStore extends VuexModule implements IAppState{
     
     get userInfo():UserInfo |undefined{
         return this.userinfo_;
+    }
+
+    @Action()
+    userLogin(licence:string,prenom?:string){
+        userService.login(licence,prenom)
+        .then(resp=>{
+            
+            commit('app/setUserInfo',{resp});
+            console.log(resp);
+            console.log("YOU ARE LOGGED");
+            window.getApp.$emit('APP_LOGIN_SUCCESS',resp);
+            
+        })
+        .catch(error=>{
+            console.error(error)
+            window.getApp.$emit('APP_REQUEST_ERROR',error);
+            this.loading = false;
+        })
     }
 }
 

@@ -16,15 +16,6 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-               <!-- <v-btn icon>
-                  <v-icon color="blue">fa fa-facebook-square fa-lg</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon color="red">fa fa-google fa-lg</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon color="light-blue">fa fa-twitter fa-lg</v-icon>
-                </v-btn>-->
                 <v-spacer></v-spacer>
                 <v-btn block color="primary" @click="login" :loading="loading" :disabled="!formValid || loading">Entrer</v-btn>
                 <v-btn v-on:click="clearForm()">Effacer</v-btn>
@@ -54,18 +45,7 @@ export default {
   methods: {
     login () {
       this.loading = true;
-      userService.login(this.licence,this.prenom)
-        .then(resp=>{
-            console.log(resp);
-            console.log("YOU ARE LOGGED");
-            window.getApp.$emit('APP_LOGIN_SUCCESS',resp);
-            
-        })
-        .catch(error=>{
-            console.error(error)
-            window.getApp.$emit('APP_REQUEST_ERROR',error);
-            this.loading = false;
-        })
+     
      /* setTimeout(() => {
         this.$router.push('/dashboard');
       }, 1000);*/
