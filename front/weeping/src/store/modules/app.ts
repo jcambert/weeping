@@ -30,14 +30,14 @@ export interface UserInfo{
 @Module({ dynamic: true, name:'app',store:store})
 export class ApplicationStore extends VuexModule implements IAppState{
     
-    user_: User | undefined;
+    user_: User | undefined=undefined
     userinfo_: UserInfo |undefined
-    loading:boolean=false
-    error=null
+    loading_:boolean=false
+    error_=null
 
     @Mutation
     SET_LOADING(value:boolean){
-        this.loading=value
+        this.loading_=value
     }
 
     @Action({commit:'SET_LOADING'})
@@ -45,9 +45,12 @@ export class ApplicationStore extends VuexModule implements IAppState{
         return value;
     }
 
+    get loading(){
+        return this.loading_
+    }
     @Mutation
     SET_ERROR(value:any){
-        this.error=value;
+        this.error_=value;
     }
 
     @Action({commit:'SET_ERROR'})
@@ -59,8 +62,14 @@ export class ApplicationStore extends VuexModule implements IAppState{
     clearError(){
         return null
     }
+
+    get error(){
+        return this.error_
+    }
+
     @Mutation
     SET_USER(value:User){
+        console.log('set new user',value)
         this.user_=value
     }
 
@@ -70,7 +79,7 @@ export class ApplicationStore extends VuexModule implements IAppState{
     }
 
     
-    get user():User|undefined{
+    get user():User |undefined{
         return this.user_
     }
    
@@ -88,21 +97,26 @@ export class ApplicationStore extends VuexModule implements IAppState{
         return this.userinfo_;
     }
 
-    @Action()
+    @Action({})
     userLogin(licence:string,prenom?:string){
+        this.context.commit('SET_LOADING',true)
+        this.context.commit('SET_ERROR',null)
         userService.login(licence,prenom)
-        .then(resp=>{
-            
-            commit('app/setUserInfo',{resp});
+        .then((resp:any)=>{
+            this.context.commit('SET_LOADING',false)
+            this.context.commit('SET_USER',resp.licencie);
+            this.context.commit('SET_USERINFO',resp.info);
             console.log(resp);
             console.log("YOU ARE LOGGED");
             window.getApp.$emit('APP_LOGIN_SUCCESS',resp);
             
         })
         .catch(error=>{
-            console.error(error)
+            this.context.commit('SET_LOADING',false)
+            this.context.commit('SET_ERROR',error)
+           // console.error(error)
             window.getApp.$emit('APP_REQUEST_ERROR',error);
-            this.loading = false;
+            
         })
     }
 }

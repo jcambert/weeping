@@ -25,11 +25,12 @@ class UserService{
             method:config.service.api.login.verb,
             data:data
         })
+        //console.log(reqlogin)
 
         return new Promise((resolve,reject)=>{
             reqlogin
             .then(resp=>{
-                console.log(resp);
+               // console.log(resp);
                 if(resp.data.liste.joueur)
                     resolve(resp.data.liste.joueur);
                 else    

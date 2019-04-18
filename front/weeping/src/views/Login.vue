@@ -2,8 +2,11 @@
   <v-app id="login" class="primary">
     <v-content>
       <v-container fluid fill-height>
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md4 lg4>
+        <v-layout column align-center justify-cente>
+          <v-flex xs12 sm8 md4 lg10 offset-lg1>
+            <alert-error @dismissed="onDismissed"  v-if="error" :text="error.message"></alert-error>
+          </v-flex>
+          <v-flex xs12 sm8 md4 lg4  offset-lg1>
             <v-card class="elevation-1 pa-3">
               <v-card-text>
                 <div class="layout column align-center">
@@ -17,7 +20,14 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn block color="primary" @click="login" :loading="loading" :disabled="!formValid || loading">Entrer</v-btn>
+                <v-btn block color="primary" @click="login" :disabled="loading" :loading="loading">
+                    Entrer 
+                    <template v-slot:loader>
+                      <span  class="custom-loader">
+                        <v-icon light>cached</v-icon>
+                      </span>
+                    </template>
+                </v-btn>
                 <v-btn v-on:click="clearForm()">Effacer</v-btn>
               </v-card-actions>
             </v-card>
@@ -31,10 +41,14 @@
 <script>
 import Appconfig from "@/api/app";
 import {userService} from '@/services/user'
+import alertError from '@/components/widgets/AlertError.vue'
 export default {
+  components:{
+    'alert-error':alertError
+  },
   data: () => ({
     config:Appconfig,
-    loading: false,
+
     licence: "905821",
     prenom: "",
     valid: false,
@@ -44,11 +58,9 @@ export default {
 
   methods: {
     login () {
-      this.loading = true;
-     
-     /* setTimeout(() => {
-        this.$router.push('/dashboard');
-      }, 1000);*/
+   
+      this.$store.dispatch('userLogin',this.licence,this.prenom)
+
     },
     clearForm() {
         this.$refs.form.reset();
@@ -56,11 +68,21 @@ export default {
     isLicence() {
         return /^\d+$/.test(this.licence) || this.licence=="" || this.licence == undefined;
     },
+    onDismissed(){
+      this.$store.dispatch('clearError');
+    }
   },
 computed: {
     formValid:function() {
         return this.valid;
+    },
+    loading(){
+      return this.$store.getters.loading
+    },
+    error(){
+      return this.$store.getters.error
     }
+    
 },
 
 };

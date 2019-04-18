@@ -14,4 +14,8 @@ declare global {
   interface String {
     formatUnicorn(...arg:any) : string;
   }
+
+  interface Window{
+    getApp:Vue
+  }
 }
