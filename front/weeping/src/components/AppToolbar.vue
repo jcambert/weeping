@@ -1,36 +1,37 @@
 <template>
   <v-toolbar
-    color="primary"
+    color="primary darken-3"
     fixed
-    dark
+    :dark="$vuetify.dark"
     app
     >
-    <v-toolbar-title class="ml-0 pl-3"><span >{{mystore}}</span>
-    </v-toolbar-title>
-    <v-toolbar-side-icon @click.stop="handleDrawerToggle"></v-toolbar-side-icon>
+    <v-toolbar-title class="ml-0 pl-3"><span ></span></v-toolbar-title>
+    <v-toolbar-side-icon @click.stop="handleDrawerToggle" dark></v-toolbar-side-icon>
       <v-text-field
         flat
         solo-inverted
         prepend-icon="search"
         label="Rechercher"
         class="hidden-sm-and-down"
+        dark
+
         >
       </v-text-field>
       <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn flat :href="'mailto:'+config.dev.mail">
+      <v-toolbar-items >
+        <v-btn dark flat :href="'mailto:'+config.dev.mail">
           Hire Me
         </v-btn>   
       </v-toolbar-items>
     
-      <v-btn icon :href="config.dev.github">
+      <v-btn icon :href="config.dev.github" dark>
         <v-icon class="fa-2x">fa-github</v-icon>
       </v-btn>
-      <v-btn icon @click="handleFullScreen()">
+      <v-btn icon @click="handleFullScreen()" dark>
         <v-icon>fullscreen</v-icon>
       </v-btn>
       <v-menu offset-y origin="center center" class="elelvation-1" :nudge-bottom="14" transition="scale-transition">
-        <v-btn icon flat slot="activator">
+        <v-btn icon flat slot="activator" dark>
         <v-badge color="red" overlap>
           <span slot="badge">3</span>
           <v-icon medium>notifications</v-icon>
@@ -40,7 +41,7 @@
       </v-menu>
       <v-menu offset-y origin="center center" :nudge-bottom="10" transition="scale-transition" >
        
-          <v-btn icon large flat slot="activator">
+          <v-btn icon large flat slot="activator" dark>
             <v-avatar size="30px">
               <img :src="config.dev.avatar" :alt="config.dev.name"/>
             </v-avatar>
@@ -63,7 +64,6 @@
 import NotificationList from '@/components/widgets/list/NotificationList';
 import Util from '@/util';
 import Appconfig from "@/api/app";
-import ApplicationModule  from '@/store/modules/app'
 export default {
   name: 'app-toolbar',
   components: {
@@ -71,7 +71,6 @@ export default {
   },
   data: () => ({
     config:Appconfig,
-    mystore:ApplicationModule,
     items: [
       {
         icon: 'account_circle',

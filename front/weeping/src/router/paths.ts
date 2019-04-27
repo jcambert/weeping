@@ -52,7 +52,9 @@ export default [
     },
     {
       path: '/',
-      meta: { },
+      meta: { 
+        public:false
+      },
       name: 'Root',
       redirect: {
         name: 'Dashboard'
@@ -60,10 +62,9 @@ export default [
     },
     {
       path: '/dashboard',
-      meta: { breadcrumb: true },
+      meta: { breadcrumb: true ,public:false},
       name: 'Dashboard',
       component: () => import(
-        
         `@/views/Dashboard.vue`
       )
     },

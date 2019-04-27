@@ -8,7 +8,7 @@
     v-model="drawer"
     width="260"
     >
-    <v-toolbar color="primary darken-1" dark>
+    <v-toolbar color="primary darken-4" dark>
       <img v-bind:src="config.logo" height="36" :alt="config.alt">
       <v-toolbar-title class="ml-0 pl-3">
         <span class="hidden-sm-and-down">{{config.name}}</span>
@@ -54,10 +54,10 @@
             <!--top-level link-->
             <v-list-tile v-else :to="!item.href ? { name: item.name } : null" :href="item.href" ripple="ripple" :disabled="item.disabled" :target="item.target" rel="noopener" :key="item.name">
               <v-list-tile-action v-if="item.icon">
-                <v-icon>{{ item.icon }}</v-icon>
+                <v-icon >{{ item.icon }}</v-icon>
               </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+              <v-list-tile-content >
+                <v-list-tile-title >{{ item.title }}</v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action v-if="item.subAction">
                 <v-icon class="success--text">{{ item.subAction }}</v-icon>

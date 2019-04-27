@@ -9,7 +9,7 @@ export default{
         mail:"jc.ambert@gmail.com",
     },
     service:{
-        url:'http://localhost:1337/api/v1/',
+        url:'http://{host}:1337/api/v1/',
         api:{
             login:{
                 verb:'post',
@@ -18,6 +18,30 @@ export default{
             retrieveLicencieInfo:{
                 verb:'get',
                 url:'userinfo/{licence}'
+            },
+            clubinfo:{
+                verb:'get',
+                url:'clubinfo/{club}'
+            },
+            joueurinfo:{
+                verb:'get',
+                url:'joueurinfo/{licence}'
+            },
+            equipes:{
+                verb:'get',
+                url:'equipes/{type}/{club}'
+            },
+            classementequipe:{
+                verb:'get',
+                url:'resultat-equipe/{cx_poule}/{d1}/classement'
+            },
+            resultatequipe:{
+                verb:'get',
+                url:'resultat-equipe/{cx_poule}/{d1}/'
+            },
+            detailrencontre:{
+                verb:'get',
+                url:"detail-rencontre/{is_retour}/{phase}/{res_1}/{res_2}/{renc_id}/{equip_1}/{equip_2}/{equip_id1}/{equip_id2}"
             }
         }
     }

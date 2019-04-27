@@ -2,7 +2,7 @@ const randomElement = (arr = []) => {
     return arr[Math.floor(Math.random() * arr.length)];
   };
   
-  const kebab =  (str) => {
+  const kebab =  (str:string) => {
     return (str || '').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   };
   

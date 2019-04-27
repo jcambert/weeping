@@ -1,5 +1,5 @@
 import Vue, { VNode } from 'vue'
-
+import {ISpidService} from '@/services/spid'
 declare global {
   namespace JSX {
     // tslint:disable no-empty-interface
@@ -16,6 +16,8 @@ declare global {
   }
 
   interface Window{
-    getApp:Vue
+    getApp:Vue,
+    spid:ISpidService
   }
+
 }

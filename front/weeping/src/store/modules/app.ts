@@ -1,11 +1,12 @@
 
 import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorators'
 import store from '..'
-import {userService} from '@/services/user'
+
 export interface IAppState {
 
     user_:User |undefined,
-    userinfo_:UserInfo|undefined
+    userinfo_:UserInfo|undefined,
+    clubinfo_:ClubInfo|undefined
   }
 
 export interface User{
@@ -27,17 +28,65 @@ export interface UserInfo{
     avatar:string|undefined,
     phone:string|undefined
 }
-@Module({ dynamic: true, name:'app',store:store})
-export class ApplicationStore extends VuexModule implements IAppState{
-    
+
+export interface ClubInfo{
+    idclub:string,
+    numero:string|undefined,
+    nom: string|undefined,
+    nomsalle:string|undefined,
+    adressesalle1: string|undefined,
+    adressesalle2:string|undefined,
+    adressesalle3: string|undefined,
+    codepsalle:string|undefined,
+    villesalle:string|undefined,
+    web:string|undefined,
+    nomcor:string|undefined,
+    prenomcor:string|undefined,
+    mailcor:string|undefined,
+    telcor:string|undefined,
+    latitude:string|undefined,
+    longitude:string|undefined,
+    datevalidation:string|undefined
+}
+
+export interface JoueurInfo{
+    licence: string,
+    nom: string,
+    prenom: string,
+    club: string,
+    nclub: string,
+    natio: string,
+    clglob: string,
+    point: string,
+    aclglob: string,
+    apoint: string,
+    clast: string,
+    clnat: string,
+    categ: string,
+    rangreg: string,
+    rangdep: string,
+    valcla: string,
+    clpro: string,
+    valinit: string
+}
+/*
+@Module({ dynamic: true, store,name:'app'})
+export default class ApplicationStore extends VuexModule implements IAppState{
+     
     user_: User | undefined=undefined
     userinfo_: UserInfo |undefined
+    clubinfo_:ClubInfo | undefined
     loading_:boolean=false
     error_=null
 
+    constructor(module: any){
+        super(module)
+        console.log('ApplicationStore created')
+    }
+
     @Mutation
     SET_LOADING(value:boolean){
-        this.loading_=value
+        this.loading_=value;
     }
 
     @Action({commit:'SET_LOADING'})
@@ -97,29 +146,59 @@ export class ApplicationStore extends VuexModule implements IAppState{
         return this.userinfo_;
     }
 
+    @Mutation
+    NONE(value:any){
+
+    }
+
     @Action({})
-    userLogin(licence:string,prenom?:string){
+    public userLogin(licence:string,prenom?:string){
         this.context.commit('SET_LOADING',true)
         this.context.commit('SET_ERROR',null)
-        userService.login(licence,prenom)
+        window.spid.login(licence,prenom)
         .then((resp:any)=>{
             this.context.commit('SET_LOADING',false)
             this.context.commit('SET_USER',resp.licencie);
             this.context.commit('SET_USERINFO',resp.info);
-            console.log(resp);
-            console.log("YOU ARE LOGGED");
+            //console.log(resp);
+            //console.log("YOU ARE LOGGED");
             window.getApp.$emit('APP_LOGIN_SUCCESS',resp);
             
         })
         .catch(error=>{
             this.context.commit('SET_LOADING',false)
             this.context.commit('SET_ERROR',error)
-           // console.error(error)
             window.getApp.$emit('APP_REQUEST_ERROR',error);
             
         })
+        return "";
     }
-}
 
-const ApplicationModule = getModule(ApplicationStore);
-export default ApplicationModule
+
+    @Mutation
+    SET_CLUB_INFO(club:ClubInfo){
+        this.clubinfo_=club
+    }
+    get clubInfo():ClubInfo|undefined{
+        return this.clubinfo_
+    }
+    @Action({commit:'NONE'})
+    public getClubInfo(numero:string){
+        this.context.commit('SET_LOADING',true)
+        this.context.commit('SET_ERROR',null)
+        window.spid.clubInfo(numero)
+            .then( (resp:any)=>{
+                this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_CLUB_INFO',resp.club);
+            })
+            .catch(error=>{
+                this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_ERROR',error)
+                window.getApp.$emit('APP_REQUEST_ERROR',error);
+            })
+        return "";
+    }
+}*/
+
+//const ApplicationModule = getModule(ApplicationStore);
+//export default ApplicationModule

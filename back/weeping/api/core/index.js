@@ -47,12 +47,12 @@ weep.load = function(){
 
         var fb =require('./firebase/index.js');
        
-        console.log(sails.config.datastores.weeping);
+        //console.log(sails.config.datastores.weeping);
         weep.db = fb.db;
         weep.debug(weep.db);
 
         weep.db.ref('weeping/person').on('child_added',snapshot=>{
-            console.log('a new value were inserted',snapshot.val());
+            //console.log('a new value were inserted',snapshot.val());
             created=snapshot.val();
             sails.sockets.broadcast(weep.name,fb.events.created,created);
         })

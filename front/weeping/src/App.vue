@@ -1,22 +1,22 @@
 <template>
    <div id="appRoot">
      <template v-if="!$route.meta.public">
-      <v-app id="inspire" class="app" dark>
-          <app-drawer class="app--drawer"></app-drawer>
+      <v-app id="inspire" class="app" :dark="$vuetify.dark">
+          <!--<app-drawer class="app--drawer"></app-drawer>-->
           <app-toolbar class="app--toolbar"></app-toolbar>
           <v-content>
             <!-- Page Header -->
-           <page-header v-if="$route.meta.breadcrumb"></page-header>
+           <!--<page-header v-if="$route.meta.breadcrumb"></page-header>-->
             <div class="page-wrapper">
               <router-view></router-view>
             </div>   
             <!-- App Footer -->
-            <v-footer height="auto" class="pa-3 app--footer" fixed dark>
+           <!-- <v-footer height="auto" class="pa-3 app--footer hidden-md-and-down" fixed :dark="$vuetify.dark" >
               <span class="caption">KD &copy; {{ new Date().getFullYear() }}</span>
               <v-spacer></v-spacer>
               <span class="caption mr-1"> Make With Love </span> <v-icon color="pink" small>favorite</v-icon>
-              <!--<div>&copy; {{ new Date().getFullYear() }}</div>-->
-            </v-footer>
+              
+            </v-footer>-->
           </v-content>
         <!-- Go to top -->
         <app-fab></app-fab>
@@ -42,7 +42,9 @@
       <transition>
         <keep-alive>
           <router-view :key="$route.fullpath"></router-view>
+          
         </keep-alive>
+         
       </transition>
     </template>
     <v-snackbar
@@ -67,7 +69,7 @@ import AppFab from '@/components/AppFab';
 import AppEvents from  './event';
 import PageHeader from '@/components/PageHeader';
 import ThemeSettings from '@/components/ThemeSettings';
-
+import {spidService} from '@/services/spid.ts'
 export default {
   components:{
     AppToolbar,
@@ -92,6 +94,7 @@ export default {
       this.$on(item.name, item.callback);
     });
     window.getApp = this;
+    window.spid = spidService;
   },
   
   methods: {

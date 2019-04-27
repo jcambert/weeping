@@ -1,19 +1,19 @@
 const Menu =  [
-    { header: 'Apps' },
+    { header: 'Application' },
     {
       title: 'Dashboard',
       group: 'apps',
       icon: 'dashboard',
       name: 'Dashboard',
     },
-   /* {
+  /*  {
       title: 'Chat',
       group: 'apps',
       icon: 'chat_bubble',
       target: '_blank',
       name: 'Chat',
     },
-    {
+   /* {
       title: 'Inbox',
       group: 'apps',
       name: 'Mail',
@@ -107,7 +107,7 @@ const Menu =  [
         { name: 'steppers', title: 'Steppers', component: 'components/steppers' },
         { name: 'editors', title: 'Editors', component: 'components/editors' },
       ]
-    },*/
+    },
     { divider: true },
     { header: 'Extras' },
     {
@@ -120,7 +120,7 @@ const Menu =  [
         { name: '403', title: '403', component: 'AccessDenied' },
         { name: '500', title: '500', component: 'ServerError' },
       ]
-    },
+    },*/
   ];
   // reorder menu
   Menu.forEach((item) => {

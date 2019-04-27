@@ -3,7 +3,7 @@ import ApplicationModule from '@/store/modules/app'
 export default [
     {
         name: 'APP_LOGIN_SUCCESS',
-        callback: function (user) {
+        callback: function (user:any) {
             this.snackbar = {
                 show: true,
                 color: 'green',
@@ -21,7 +21,7 @@ export default [
       },
       {
         name:'APP_REQUEST_ERROR',
-        callback:function(e){
+        callback:function(e:any){
             this.snackbar = {
                 show: true,
                 color: 'red',
@@ -31,7 +31,7 @@ export default [
       },
       {
         name: 'APP_LOGOUT',
-        callback: function (e) {
+        callback: function (e:any) {
           this.snackbar = {
             show: true,
             color: 'green',
@@ -42,12 +42,12 @@ export default [
       },
       {
         name: 'APP_PAGE_LOADED',
-        callback: function (e) {
+        callback: function (e:any) {
         }
       },
       {
         name: 'APP_AUTH_FAILED',
-        callback: function (e) {
+        callback: function (e:any) {
           this.$router.push('/login');
           this.$message.error('Token has expired');
         }
@@ -55,14 +55,14 @@ export default [
       {
         name: 'APP_BAD_REQUEST',
         // @error api response data
-        callback: function (msg) {
+        callback: function (msg:any) {
           this.$message.error(msg);
         }
       },
       {
         name: 'APP_ACCESS_DENIED',
         // @error api response data
-        callback: function (msg) {
+        callback: function (msg:any) {
           this.$message.error(msg);
           this.$router.push('/forbidden');
         }
@@ -70,14 +70,14 @@ export default [
       {
         name: 'APP_RESOURCE_DELETED',
         // @error api response data
-        callback: function (msg) {
+        callback: function (msg:any) {
           this.$message.success(msg);
         }
       },
       {
         name: 'APP_RESOURCE_UPDATED',
         // @error api response data
-        callback: function (msg) {
+        callback: function (msg:any) {
           this.$message.success(msg);
         }
       },

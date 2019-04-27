@@ -37,7 +37,11 @@ module.exports = {
 
 
   exits: {
-
+    badRequest: {
+        description: 'Invalid data',
+        //This one, as well as ´ok´ are always available
+        responseType: 'badRequest'
+    },
   },
 
 
@@ -48,12 +52,12 @@ module.exports = {
     if(!inputs.valid)
       inputs.valid=0;
     weep.spid.joueur_liste_spid(inputs)
-    .then(resp=>{
-      return exits.success(resp.data);
-    })
-    .catch(err=>{
-      return exits.badRequest(err);
-    });
+      .then(resp=>{
+        return exits.success(resp.data);
+      })
+      .catch(err=>{
+        return exits.badRequest(err);
+      });
 
   }
 
