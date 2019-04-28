@@ -1,14 +1,8 @@
 <template>
 
     <v-card>
-        <!--<v-layout column class="media ma-0">
-            <v-card-title color="primary" class="pl-5 pt-0">
-                <div class="headline pl-5 pt-1">{{joueur.nom}} {{joueur.prenom}}</div>
-            </v-card-title>
-            <v-divider ></v-divider>
-        </v-layout>-->
         <div class="text-xs-center">
-            <v-chip :color="getTileColor(info)" text-color="white" v-for="(info,key) in tileInfos()" :key="key">
+            <v-chip :color="getTileColor(info)" text-color="white" v-for="(info,key) in tileInfos" :key="key">
                 <v-avatar  :class="getTileColor(info,true)">{{info.value}}</v-avatar>
                 {{info.text}}
             </v-chip>
@@ -45,6 +39,7 @@
 </template>
 
 <script>
+
 export default {
     components:{
         
@@ -54,24 +49,18 @@ export default {
             type:Object, 
             required:true 
         },
+        parties:{
+            type:Array,
+            required:false,
+            default:[]
+        }
 
     },
     data: () => ({
-        
+        pointsParties:0
     }),
     methods: {
-      tileInfos(){
-          let res=[
-            {text:'Classement',value:this.joueur.clast},
-            {text:'Points Mensuels',value:parseInt(this.joueur.point)},
-            {text:'Points Officiels',value:parseInt(this.joueur.valcla)},
-            {text:'Points Officiels',value:parseInt(this.joueur.valcla)},
-            {text:'Progression mensuelle',value:parseInt(this.joueur.point-this.joueur.valcla),progression:true},
-            {text:'Progression annuelle',value:parseInt(this.joueur.point-this.joueur.valinit),progression:true},
-          ];
-          
-          return res
-      },
+      
       getTileColor(info,isChip){
           let res=""
           if(info.progression){
@@ -83,7 +72,29 @@ export default {
       }
     },
     computed:{
-       
+       tileInfos(){
+          let res=[
+            {text:'Classement',value:this.joueur.clast},
+            {text:'Points Mensuels',value:parseInt(this.joueur.point)},
+            {text:'Points Officiels',value:parseInt(this.joueur.valcla)},
+            {text:'Progression mensuelle',value:parseInt(this.joueur.point-this.joueur.valcla),progression:true},
+            {text:'Progression annuelle',value:parseInt(this.joueur.point-this.joueur.valinit),progression:true},
+            {text:'Points Parties',value:parseInt(this.pointsParties),progression:true},
+          ];
+          
+          return res
+      },
+    },
+    watch:{
+        parties(parties){
+           // console.log("parties has changed",parties)
+            this.pointsParties=0
+            _.forEach(parties,partie=>{
+                var pts=window.spid.calculPoints({ja:{points:parseInt(this.joueur.valcla)},jb:{points:parseInt(partie.classement)}},{scorea:partie.victoire=="V"?1:0,scoreb:partie.victoire=="D"?1:0})
+                this.pointsParties+=pts.pointa
+            })
+            
+        }
     }
 }
 </script>

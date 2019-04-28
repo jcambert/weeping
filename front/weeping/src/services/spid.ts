@@ -6,16 +6,19 @@ import _ from 'lodash'
 const qs = require('querystring');
 
 export interface ISpidService{
-    login(licence:string,prenom?:string|""):Promise<{}>;
-    clubInfo(numero:string):Promise<{}>;
-    joueurInfo(licence:string):Promise<{}>;
-    equipes(numero:string,phase:string):Promise<{}>;
-    classementEquipe(lien:string):Promise<{}>;
-    resultatEquipe(lien: string): Promise<{}>;
+    calculPoints(joueurs:any,partie:any):{}
+    login(licence:string,prenom?:string|""):Promise<{}>
+    clubInfo(numero:string):Promise<{}>
+    joueurInfo(licence:string):Promise<{}>
+    equipes(numero:string,phase:string):Promise<{}>
+    classementEquipe(lien:string):Promise<{}>
+    resultatEquipe(lien: string): Promise<{}>
     detailRencontre(lien:string):Promise<{}>
+    joueurParties(licence:string):Promise<{}>
 }
 
 class SpidService implements ISpidService{
+    
     
     
     
@@ -228,6 +231,55 @@ class SpidService implements ISpidService{
             })
         })
     }
+
+    public async joueurParties(licence: string): Promise<{}> {
+        let opts={
+            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
+            url:config.service.api.joueurparties.url.formatUnicorn({licence:licence}),
+            method:config.service.api.clubinfo.verb
+        }
+       
+        let req= axios(opts)
+        return new Promise((resolve,reject)=>{
+            req
+            .then((resp:any)=>{
+               // console.log(resp)
+                resolve(resp.data.liste)
+            })
+            .catch(error=>{
+                reject(error)
+            })
+        })
+    }
+
+    public calculPoints(joueurs:any,partie:any):{}{
+        return calculPoints(joueurs,partie)
+    }
 }
 
 export const spidService = new SpidService()
+
+
+var bareme={
+    24:{vn:5,dn:-5,va:6,da:-5},
+    49:{vn:5.5,dn:-4.5,va:7,da:-6},
+    99:{vn:5,dn:-4,va:8,da:-7},
+    149:{vn:4,dn:-3,va:10,da:-8},
+    199:{vn:3,dn:-2,va:13,da:-10},
+    299:{vn:2,dn:-1,va:17,da:-12.5},
+    399:{vn:1,dn:-0.5,va:22,da:-16},
+    499:{vn:0.5,dn:0,va:28,da:-20},
+    99999:{vn:0,dn:0,va:40,da:-29},
+    }
+export   function calculPoints(joueurs:any,partie:any){
+    var ecart=parseInt(joueurs.ja.points)-parseInt(joueurs.jb.points)
+    var score=parseInt( partie.scorea)>parseInt(partie.scoreb)
+    var b=_.findLast(bareme,(b,key)=>{ return parseInt(key) <=Math.abs(ecart)})
+    if(_.isUndefined(b))
+        b=bareme[24]
+    //console.log('joueurs',joueurs,'ecart',ecart,'score',score, 'bareme',b)
+    if(score)
+        return {pointa:ecart>0?b.vn:b.va,pointb:ecart>0?b.dn:b.da}
+    else
+        return {pointa:ecart>0?b.da:b.dn,pointb:ecart>0?b.va:b.vn}
+}

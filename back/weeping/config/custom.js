@@ -107,7 +107,7 @@ module.exports.custom = {
         "joueur_liste_spid":"liste_joueur_o",
         "joueur_detail_cla":"joueur",
         "joueur_detail_spid":"licence_b",
-        "joueur_partie":"partie_mysql",
+        "joueur_partie":"partie",
         "joueur_historique_cla":"histo_classement"
     }
   }

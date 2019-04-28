@@ -7,6 +7,7 @@
             <v-btn dark icon class="mr-3" @click="$emit('onSearch')" v-if="searchable"><v-icon>search</v-icon></v-btn>
             <v-btn dark icon class="mr-3" @click="$emit('onEdit')" v-if="editable"><v-icon>edit</v-icon></v-btn>
             <v-btn dark icon @click="$emit('onMore')" v-if="moreable"><v-icon>more_vert</v-icon></v-btn>
+            <slot name="toolbar"></slot>
         </v-toolbar>
         <slot ></slot>
     </div>
@@ -21,15 +22,15 @@ export default {
         },
         searchable:{
             type:Boolean,
-            default:true
+            default:false
         },
         editable:{
             type:Boolean,
-            default:true
+            default:false
         },
         moreable:{
             type:Boolean,
-            default:true
+            default:false
         } 
     },
 }

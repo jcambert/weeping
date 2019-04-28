@@ -75,12 +75,13 @@ module.exports.routes = {
   'GET /api/v1/spid/joueur-partie': { action: 'spid/joueur-partie' },
   'GET /api/v1/spid/joueur-historique-cla': { action: 'spid/joueur-historique-cla' },
   'POST /api/v1/spid/login': { action: 'spid/joueur-liste-spid' },
-  'GET /api/v1/userinfo/:licence': 'LicencieInfoController.get',
-  'GET /api/v1/clubinfo/:club': {action:'spid/club-detail'},
-  'GET /api/v1/joueurinfo/:licence':{action:'spid/joueur-detail-cla'},
+  'GET /api/v1/user-info/:licence': 'LicencieInfoController.get',
+  'GET /api/v1/club-info/:club': {action:'spid/club-detail'},
+  'GET /api/v1/joueur-info/:licence':{action:'spid/joueur-detail-cla'},
   'GET /api/v1/equipes/:type/:numclu':{ action: 'spid/equipe-liste' },
   'GET /api/v1/resultat-equipe/:cx_poule/:d/:action?':{ action: 'spid/resultat-equipe' },
   'GET /api/v1/detail-rencontre/:is_retour/:phase/:res_1/:res_2/:renc_id/:equip_1/:equip_2/:equip_id1/:equip_id2':{ action: 'spid/rencontre' },
+  'GET /api/v1/joueur-parties/:numlic':{ action: 'spid/joueur-partie' },
   //  ╔╦╗╦╔═╗╔═╗  ╦═╗╔═╗╔╦╗╦╦═╗╔═╗╔═╗╔╦╗╔═╗
   //  ║║║║╚═╗║    ╠╦╝║╣  ║║║╠╦╝║╣ ║   ║ ╚═╗
   //  ╩ ╩╩╚═╝╚═╝  ╩╚═╚═╝═╩╝╩╩╚═╚═╝╚═╝ ╩ ╚═╝

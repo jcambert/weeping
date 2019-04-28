@@ -36,9 +36,10 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
     classement_:Array<any>=[]
     resultat_:Array<any>=[]
     detailRencontre_:{}|undefined=undefined
+    joueurparties_:Array<any>=[]
     loading_:boolean=false
     error_=null
-    loaders_={}
+    loaders_={clubinfo:false,joueurinfo:false,equipes:false,classementequipe:false,detailrencontre:false,joueurparties:false}
 
     categorieAge_= {
         'N': { value: 'Non determiné' },
@@ -63,7 +64,7 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
     constructor(module: any){
         super(module)
         //console.log('ApplicationStore created')
-        this.loaders_={clubinfo:false,joueurinfo:false,equipes:false,classementequipe:false}
+       // this.loaders_={clubinfo:false,joueurinfo:false,equipes:false,classementequipe:false,detailrencontre:false,joueurparties:false}
         
     }
 
@@ -75,6 +76,7 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
         this.context.commit('SET_CLUB_INFO',undefined)
         this.context.commit('SET_DETAIL_RENCONTRE',undefined)
         this.context.commit('SET_EQUIPES',[])
+        this.context.commit('SET_JOUEUR_PARTIES',[])
         this.context.commit('CLEAR_CLASSEMENT_EQUIPE')
         this.context.commit('CLEAR_RESULTAT_EQUIPE')
         return ""
@@ -96,8 +98,8 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
 
     @Mutation
     SET_LOADER(loaders:{}){
-        _.forEach(loaders,(value,key)=>{
-            //this.loaders_[key]=value
+        _.forEach(loaders,(value:boolean,key:string)=>{
+            this.loaders_[key]=value
         })
     }
 
@@ -393,17 +395,52 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
 
     @Action({})
     getDetailRencontre(payload:any){
-        console.log(payload)
+        //console.log(payload)
         this.context.commit('SET_LOADING',true)
         this.context.commit('SET_ERROR',null)
+        this.context.commit('SET_LOADER',{detailrencontre:true})
+
         window.spid.detailRencontre(payload)
             .then((resp:any)=>{
                 this.context.commit('SET_DETAIL_RENCONTRE',resp)
                 this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_LOADER',{detailrencontre:false})
+            })
+            .catch(error=>{
+                this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_LOADER',{detailrencontre:false})
+                this.context.commit('SET_ERROR',error)
+                window.getApp.$emit('APP_REQUEST_ERROR',error);
+            })
+    }
+    @Mutation
+    SET_JOUEUR_PARTIES(payload:any){
+        this.joueurparties_.splice(0,this.joueurparties_.length)
+        _.forEach(payload,partie=>this.joueurparties_.push(partie))
+        this.joueurparties_=payload
+    }
+
+    public get joueurParties(){
+        return this.joueurparties_
+    }
+
+    @Action({})
+    getJoueurParties(payload:any){
+        this.context.commit('SET_LOADING',true)
+        this.context.commit('SET_ERROR',null)
+        this.context.commit('SET_LOADER',{joueurparties:true})
+        this.context.commit('SET_JOUEUR_PARTIES',[])
+        
+        window.spid.joueurParties(payload.licence)
+            .then((resp:any)=>{
+                this.context.commit('SET_JOUEUR_PARTIES',resp.resultat)
+                this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_LOADER',{joueurparties:false})
                 
             })
             .catch(error=>{
                 this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_LOADER',{joueurparties:false})
                 this.context.commit('SET_ERROR',error)
                 window.getApp.$emit('APP_REQUEST_ERROR',error);
             })

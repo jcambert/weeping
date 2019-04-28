@@ -8,7 +8,7 @@ module.exports = {
 
 
   inputs: {
-    licence:{
+    numlic:{
       description:"Numero de licence",
       type:'string',
       required:true

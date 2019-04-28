@@ -95,6 +95,7 @@
 </template>
 
 <script>
+/*
 let bareme={
     24:{vn:5,dn:-5,va:6,da:-5},
     49:{vn:5.5,dn:-4.5,va:7,da:-6},
@@ -117,7 +118,7 @@ let calculPoints = function(joueurs,partie){
         return {pointa:ecart>0?b.vn:b.va,pointb:ecart>0?b.dn:b.da}
     else
         return {pointa:ecart>0?b.da:b.dn,pointb:ecart>0?b.va:b.vn}
-}
+}*/
 export default {
     props:{
         show:{
@@ -161,7 +162,7 @@ export default {
                 var gb=partie.scoreb
                 
 
-                var points=calculPoints({ja:res['a'].joueurs[ja],jb:res['b'].joueurs[jb]},partie)
+                var points=window.spid.calculPoints({ja:res['a'].joueurs[ja],jb:res['b'].joueurs[jb]},partie)
                 res['a'].joueurs[ja].parties.push(points.pointa)
                 res['b'].joueurs[jb].parties.push(points.pointb)
                 res['a'].joueurs[ja].total+=points.pointa

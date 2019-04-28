@@ -17,15 +17,15 @@ export default{
             },
             retrieveLicencieInfo:{
                 verb:'get',
-                url:'userinfo/{licence}'
+                url:'user-info/{licence}'
             },
             clubinfo:{
                 verb:'get',
-                url:'clubinfo/{club}'
+                url:'club-info/{club}'
             },
             joueurinfo:{
                 verb:'get',
-                url:'joueurinfo/{licence}'
+                url:'joueur-info/{licence}'
             },
             equipes:{
                 verb:'get',
@@ -41,7 +41,11 @@ export default{
             },
             detailrencontre:{
                 verb:'get',
-                url:"detail-rencontre/{is_retour}/{phase}/{res_1}/{res_2}/{renc_id}/{equip_1}/{equip_2}/{equip_id1}/{equip_id2}"
+                url:'detail-rencontre/{is_retour}/{phase}/{res_1}/{res_2}/{renc_id}/{equip_1}/{equip_2}/{equip_id1}/{equip_id2}'
+            },
+            joueurparties:{
+                verb:'get',
+                url:'joueur-parties/{licence}'
             }
         }
     }
