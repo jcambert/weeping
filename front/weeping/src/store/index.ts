@@ -416,7 +416,11 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
     @Mutation
     SET_JOUEUR_PARTIES(payload:any){
         this.joueurparties_.splice(0,this.joueurparties_.length)
-        _.forEach(payload,partie=>this.joueurparties_.push(partie))
+        _.forEach(payload,
+            partie=>{
+                
+                this.joueurparties_.push(partie)
+            })
         this.joueurparties_=payload
     }
 

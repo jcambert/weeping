@@ -34,7 +34,7 @@
         </div>
         <resultat-equipe :resultats="selectedResultat" :show="showResultatSheet" v-if="selectedResultat" v-on:close="showResultatSheet=false" v-on:wantshowdetailrencontre="wantShowDetailRencontre"></resultat-equipe>
         <detail-rencontre :rencontre="detailRencontre" :show="showDetailRencontre" v-if="detailRencontre" v-on:close="showDetailRencontre=false" ></detail-rencontre>
-        <joueur-parties :parties="joueurParties" v-if="joueurParties" :show="showParties" v-on:close="showParties=false"></joueur-parties>
+        <joueur-parties :joueur="joueur" :parties="joueurParties" v-if="joueur && joueurParties" :show="showParties" v-on:close="showParties=false"></joueur-parties>
     </vue-perfect-scrollbar>
 </template>
 

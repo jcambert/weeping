@@ -277,7 +277,7 @@ export   function calculPoints(joueurs:any,partie:any){
     var b=_.findLast(bareme,(b,key)=>{ return parseInt(key) <=Math.abs(ecart)})
     if(_.isUndefined(b))
         b=bareme[24]
-    //console.log('joueurs',joueurs,'ecart',ecart,'score',score, 'bareme',b)
+    //console.log('joueurs',joueurs,'partie',partie,'ecart',ecart,'score',score, 'bareme',b)
     if(score)
         return {pointa:ecart>0?b.vn:b.va,pointb:ecart>0?b.dn:b.da}
     else
