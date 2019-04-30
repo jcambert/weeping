@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import './plugins/vuetify'
 import './plugins/axios'
-import App from '@/App.vue'
-import router from "./router/"
+import App from '@/application/App.vue'
+import router from './router/'
 import store from "./store/"
 //import "./registerServiceWorker";
 
@@ -18,9 +18,9 @@ new Vue({
 
 
 String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
-function (...arg:any) {
+function (this:string,...arg:any):string {
     "use strict";
-    var str = this.toString();
+    var str:string = this;//(this as String).toString();
     if (arg.length) {
         var t = typeof arg[0];
         var key;

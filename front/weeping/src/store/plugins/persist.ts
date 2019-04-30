@@ -1,4 +1,4 @@
-import {Store} from 'vuex'
+/*import {Store} from 'vuex'
 import merge from 'deepmerge';
 import * as shvl from 'shvl';
 
@@ -83,4 +83,4 @@ export default function(options?:OptionPersistentStorage, storage?:Storage, key?
         }
         });
     };
-};
+};*/

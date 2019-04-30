@@ -1,3 +1,11 @@
+interface Document {
+  exitFullscreen: () => void;
+  mozCancelFullScreen: () => void;
+  webkitExitFullscreen: () => void;
+  fullscreenElement: () => void;
+  mozFullScreenElement: () => void;
+  webkitFullscreenElement: () => void;
+}
 const randomElement = (arr = []) => {
     return arr[Math.floor(Math.random() * arr.length)];
   };
@@ -7,8 +15,8 @@ const randomElement = (arr = []) => {
   };
   
   const toggleFullScreen = () => {
-    let doc = window.document;
-    let docEl = doc.documentElement;
+    let doc = window.document ;
+    let docEl = doc.documentElement ;
   
     let requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
     let cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;

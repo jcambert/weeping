@@ -19,5 +19,21 @@ declare global {
     getApp:Vue,
     spid:ISpidService
   }
+  interface Document{
+    mozCancelFullScreen?():void;
+    webkitExitFullscreen?():void;
+    msExitFullscreen?():void;
+    mozFullScreenElement?():void;
+    webkitFullscreenElement?():void;
+    msFullscreenElement?():void;
+  }
+  interface HTMLElement {
+    requestFullScreen?(): void;
+    mozRequestFullScreen?():void;
+    webkitRequestFullScreen?():void;
+    msRequestFullscreen?():void;
+    
+
+  }
 
 }
