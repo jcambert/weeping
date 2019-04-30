@@ -2,8 +2,8 @@ version: '3.2'
 
 services:
   weeping_front:
-    labels: 
-      com.ambert.weeping.description:"Gestion des informations de la FFTT"
+    #labels: 
+    #  com.ambert.weeping.description:"Gestion des informations de la FFTT"
     build: 
       context: ./front/weeping/
       dockerfile: dockerfile
