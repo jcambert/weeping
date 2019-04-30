@@ -1,6 +1,6 @@
 
 import Vue from 'vue'
-import config from '@/api/app'
+import config, { IApi, IApiContent, Verb } from '@/api/app'
 import axios, { AxiosPromise } from 'axios'
 import _ from 'lodash'
 const qs = require('querystring');
@@ -16,7 +16,12 @@ export interface ISpidService{
     detailRencontre(lien:string):Promise<{}>
     joueurParties(licence:string):Promise<{}>
 }
-
+interface IRequestOption{
+    baseURL:string
+    url:string
+    method:string
+    data?:object
+}
 class SpidService implements ISpidService{
     
     
@@ -39,15 +44,16 @@ class SpidService implements ISpidService{
     }   
 
     buildReq(meth:string,data:object){
-        let opts={
+        var api=config.service.api[meth] as IApiContent
+        var opts:IRequestOption={
             baseURL: config.service.url.formatUnicorn({host:this.hostname}),
-            url:config.service.api[meth].url,
-            method:config.service.api[meth].verb,
+            url:api.url,
+            method:api.verb,
         }
-        if(opts.method=='get'){
+        if(api.verb==Verb.GET){
             opts.url=opts.url.formatUnicorn(data)
         }
-        if(opts.method=='post')
+        if(api.verb==Verb.POST)
             opts.data=data
         //console.log(opts)
         return opts
@@ -62,12 +68,7 @@ class SpidService implements ISpidService{
                 licence:licence,
                 prenom:prenom
             }
-        let req= axios(this.buildReq('login',data) /*{
-            baseURL: config.service.url,
-            url:config.service.api.login.url,
-            method:config.service.api.login.verb,
-            data:data
-        }*/)
+        let req= axios(this.buildReq('login',data) )
         //console.log(reqlogin)
 
         return new Promise((resolve,reject)=>{

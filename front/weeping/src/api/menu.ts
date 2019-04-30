@@ -1,4 +1,18 @@
-const Menu =  [
+interface IMenuItem{
+  name:string
+  title:string
+  component:string
+}
+interface IMenu{
+  header?:string
+  title?:string
+  group?:string
+  icon?:string
+  name?:string
+  items?:[IMenuItem]
+}
+
+const Menu : IMenu[]= [
     { header: 'Application' },
     {
       title: 'Dashboard',
@@ -123,7 +137,7 @@ const Menu =  [
     },*/
   ];
   // reorder menu
-  Menu.forEach((item) => {
+  Menu.forEach((item:IMenu) => {
     if (item.items) {
       item.items.sort((x, y) => {
         let textA = x.title.toUpperCase();
