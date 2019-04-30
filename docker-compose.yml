@@ -6,7 +6,7 @@ services:
     #  com.ambert.weeping.description:"Gestion des informations de la FFTT"
     build: 
       context: ./front/weeping/
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     image: weeping_front:1.0
     ports: 
       - "5000:80"
