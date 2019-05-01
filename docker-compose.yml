@@ -3,8 +3,8 @@ version: '3.7'
 services:
   weeping_front:
     build: 
-      context: .
-      dockerfile: ./front/weeping/Dockerfile
+      context: ./front/weeping/
+      dockerfile: Dockerfile
     image: weeping_front:1.0
     ports: 
       - "${FRONT_PORT}:80"
@@ -16,12 +16,12 @@ services:
 
   weeping_back:
     build:
-      context: .
-      dockerfile: ./back/weeping/Dockerfile
+      context: ./back/weeping/
+      dockerfile: Dockerfile
     image: weeping_back:1.0
     ports: 
       - "${BACK_PORT}:1337"
     volumes:
       - ./back/weeping/:/usr/src/app
-    #command: ["node","/usr/src/app/app.js"]
+    command: ["node","/usr/src/app/app.js"]
   
