@@ -18,7 +18,7 @@ RUN mkdir -p /usr/src/app
 RUN chmod -R 777 /usr/src/app
 # - Node uses a "package manager", so it needs to copy in package.json file
 WORKDIR /usr/src/app
-COPY package.json /usr/src/app/
+ADD package.json .
 
 
 
@@ -26,7 +26,7 @@ COPY package.json /usr/src/app/
 RUN npm install 
 # - to keep it clean and small, run 'npm cache clean --force' after above
 # - then it needs to copy in all files from current directory
-COPY . /usr/src/app
+ADD . .
 
 RUN pwd
 RUN ls -la
@@ -35,4 +35,4 @@ RUN ls -la
 # CMD ["forever", "start" ,"./app.js","--prod"]
 # CMD ["node","./app.js","--prod"]
 EXPOSE 1337
-#CMD ["node","app.js"]
+CMD ["node","app.js"]
