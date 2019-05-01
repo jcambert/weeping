@@ -1,6 +1,6 @@
 # Instructions from the app developer
 # - you should use the 'node' official image, with the alpine 6.x branch
-FROM node:latest
+FROM node:alpine
 # - this app listens on port 3000, but the container should launch on port 80
   #  so it will respond to http://localhost:80 on your computer
 EXPOSE 1337
