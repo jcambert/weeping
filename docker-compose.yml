@@ -18,8 +18,6 @@ services:
     build:
       context: ./back/weeping
       dockerfile: Dockerfile
-    environment: 
-      - port: 1337
     image: weeping_back:1.0
     ports: 
       - "${BACK_PORT}:1337"
