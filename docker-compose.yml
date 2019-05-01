@@ -23,5 +23,5 @@ services:
       - "${BACK_PORT}:1337"
     volumes:
       - ./back/weeping/:/usr/src/app
-    command: ["node","/usr/src/app/app.js"]
+    #command: ["node","/usr/src/app/app.js"]
   

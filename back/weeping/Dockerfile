@@ -18,6 +18,8 @@ RUN mkdir -p /usr/src/app
 RUN chmod -R 777 /usr/src/app
 # - Node uses a "package manager", so it needs to copy in package.json file
 WORKDIR /usr/src/app
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+ENV NODE_PATH /usr/src/app/node_modules/:$NODE_PATH
 ADD package.json .
 
 # - then it needs to run 'npm install' to install dependencies from that file
@@ -33,4 +35,4 @@ RUN ls -la
 # CMD ["forever", "start" ,"./app.js","--prod"]
 # CMD ["node","./app.js","--prod"]
 EXPOSE 1337
-#CMD ["node","app.js"]
+CMD ["node","app.js"]
