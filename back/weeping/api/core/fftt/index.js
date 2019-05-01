@@ -62,7 +62,9 @@ const request = function(api,opts){
     /*return new Promise( (resolve,reject)=>{
         resolve(makeurl(api));
     })*/
-    return req.get( makeurl(api,opts));
+    url= makeurl(api,opts)
+   // sails.debug.log(url)
+    return req.get(url);
 }
 
 module.exports= {

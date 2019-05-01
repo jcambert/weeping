@@ -1,4 +1,4 @@
-import Vue from 'vue'
+/*import Vue from 'vue'
 import store from '@/store'
 //import App from '@/application/App.vue'
 import VueSocketIO from 'vue-socket.io'
@@ -13,4 +13,4 @@ Vue.use(new VueSocketIO({
         mutationPrefix: 'SOCKET_'
     },
     //options: { path: "/my-app/" } //Optional options
-}))
+})*/

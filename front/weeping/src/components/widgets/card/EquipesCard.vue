@@ -3,7 +3,7 @@
 
         <v-list two-line class="pa-0">
             <template v-for="(equipe,index) in equipes" >
-                <v-list-tile href="#" :key="index">
+                <v-list-tile href="#" >
                     
                     <v-list-tile-action>
                         <v-icon color="primary">group</v-icon>
@@ -22,7 +22,7 @@
                     </v-list-tile-action>
                     
                 </v-list-tile>
-                <v-divider inset :key="index"></v-divider>
+                <v-divider inset ></v-divider>
             </template>
             
         </v-list>

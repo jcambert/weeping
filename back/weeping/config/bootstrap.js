@@ -27,6 +27,10 @@ module.exports.bootstrap = async function(done) {
   // depends on some factors:
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+  //start weeping core
+  await weep.load();
+  sails.log.debug("SAILS ADAPTER");
+
   // If the hard-coded data version has been incremented, or we're being forced
   // (i.e. `--drop` or `--environment=test` was set), then run the meat of this
   // bootstrap script to wipe all existing data and rebuild hard-coded data.
@@ -79,9 +83,7 @@ module.exports.bootstrap = async function(done) {
   });
 
 
-  //start weeping core
-  await weep.load();
-  weep.debug("SAILS ADAPTER");
+
   
   // Don't forget to trigger `done()` when this bootstrap function's logic is finished.
   // (otherwise your server will never lift, since it's waiting on the bootstrap)

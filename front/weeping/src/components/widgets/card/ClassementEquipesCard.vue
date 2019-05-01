@@ -1,8 +1,8 @@
 <template>
     <v-card>
         <v-list   class="pa-0">
-            <v-template v-for="(clt,index) in classement" :key="index">
-                <v-list-tile href="#"  :key="index">
+            <div v-for="(clt,index) in classement" >
+                <v-list-tile href="#" >
                     <v-list-tile-action>
                         <v-icon color="primary">group</v-icon>
                     </v-list-tile-action>
@@ -15,7 +15,7 @@
                     </v-list-tile-action>
                 </v-list-tile>
                 <v-divider inset></v-divider>
-            </v-template>
+            </div>
         </v-list>
     </v-card>
 </template>

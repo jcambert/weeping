@@ -42,16 +42,18 @@ class SpidService implements ISpidService{
     }
 
     get baseUrl(){
-        return app.service.url.formatUnicorn({host:this.hostname})
+        return app.service.url.formatUnicorn({host:this.hostname,port:this.port})
     }   
 
     buildReq(meth:string,data:object){
         var api=app.service.api[meth] as IApiContent
         var opts:IRequestOption={
-            baseURL: app.service.url.formatUnicorn({host:this.hostname}),
+            baseURL: app.service.url.formatUnicorn({host:this.hostname,port:this.port}),
             url:api.url,
             method:api.verb,
         }
+        // eslint-disable-next-line
+        console.log(opts)
         if(api.verb==Verb.GET){
             opts.url=opts.url.formatUnicorn(data)
         }
@@ -91,13 +93,13 @@ class SpidService implements ISpidService{
     }
 
     retrieveInfo(joueur:any){
-
-        let reqretrieve= axios({
-            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+        var opts={
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.retrieveLicencieInfo.url.formatUnicorn(joueur),
             method:app.service.api.retrieveLicencieInfo.verb,
             //data:{licence:joueur.licence}
-        })
+        }
+        let reqretrieve= axios(opts)
         return new Promise((resolve,reject)=>{
             reqretrieve
             .then(resp=>{
@@ -110,8 +112,8 @@ class SpidService implements ISpidService{
     }
 
     public async clubInfo(numero:string){
-        let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+        var opts={
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.clubinfo.url.formatUnicorn({club:numero}),
             method:app.service.api.clubinfo.verb
         }
@@ -131,7 +133,7 @@ class SpidService implements ISpidService{
 
     public async joueurInfo(licence: string): Promise<{}> {
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.joueurinfo.url.formatUnicorn({licence:licence}),
             method:app.service.api.clubinfo.verb
         }
@@ -151,7 +153,7 @@ class SpidService implements ISpidService{
 
     public async equipes(numero: string,phase:string): Promise<{}> {
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.equipes.url.formatUnicorn({club:numero,type:'A'}),
             method:app.service.api.equipes.verb
         }
@@ -173,7 +175,7 @@ class SpidService implements ISpidService{
         let query=qs.parse(lien)
         //console.log(query)
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.classementequipe.url.formatUnicorn(query),
             method:app.service.api.equipes.verb
         }
@@ -195,7 +197,7 @@ class SpidService implements ISpidService{
         let query=qs.parse(lien)
         //console.log(query)
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.resultatequipe.url.formatUnicorn(query),
             method:app.service.api.equipes.verb
         }
@@ -217,7 +219,7 @@ class SpidService implements ISpidService{
         let query=qs.parse(lien)
         //console.log(query)
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.detailrencontre.url.formatUnicorn(query),
             method:app.service.api.equipes.verb
         }
@@ -237,7 +239,7 @@ class SpidService implements ISpidService{
 
     public async joueurParties(licence: string): Promise<{}> {
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.joueurparties.url.formatUnicorn({licence:licence}),
             method:app.service.api.clubinfo.verb
         }
