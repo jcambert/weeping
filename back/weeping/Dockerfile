@@ -11,8 +11,9 @@ RUN mkdir -p /usr/src/app
 # - Node uses a "package manager", so it needs to copy in package.json file
 WORKDIR /usr/src/app
 COPY package.json package.json 
+RUN  npm install sails -g
 # - then it needs to run 'npm install' to install dependencies from that file
-RUN npm install && npm cache clean --force && npm install sails -g
+RUN npm install 
 # - to keep it clean and small, run 'npm cache clean --force' after above
 # - then it needs to copy in all files from current directory
 COPY . .
