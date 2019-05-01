@@ -41,7 +41,7 @@ const app:IApplicationConfiguration={
         mail:"jc.ambert@gmail.com",
     },
     service:{
-        url:'http://{host}:1337/api/v1/',
+        url:'http://{host}:{port}/api/v1/',
         api:{
             login:{
                 verb:Verb.POST,

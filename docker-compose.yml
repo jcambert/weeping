@@ -1,15 +1,28 @@
-version: '3.2'
+version: '3.7'
 
 services:
   weeping_front:
-    #labels: 
-    #  com.ambert.weeping.description:"Gestion des informations de la FFTT"
     build: 
       context: ./front/weeping/
       dockerfile: Dockerfile
     image: weeping_front:1.0
     ports: 
-      - "5000:80"
+      - "${FRONT_PORT}:80"
     environment: 
-      PRODUCTION: 'true'
+      - PRODUCTION: 'true'
+      - BACK_PORT: "${BACK_PORT}"
+    depends_on: 
+      - weeping_back
+
+  weeping_back:
+    build:
+      context: ./back/weeping
+      dockerfile: Dockerfile
+    environment: 
+      - port: 1337
+    image: weeping_back:1.0
+    ports: 
+      - "${BACK_PORT}:1337"
+    volumes:
+      - .:/usr/src/app
   

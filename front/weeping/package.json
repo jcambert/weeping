@@ -20,6 +20,7 @@
     "lodash": "^4.17.11",
     "nprogress": "^0.2.0",
     "roboto-fontface": "^0.10.0",
+    "sails.io.js-dist": "^1.0.0",
     "vue": "^2.6.6",
     "vue-class-component": "^7.0.2",
     "vue-perfect-scrollbar": "^0.1.0",

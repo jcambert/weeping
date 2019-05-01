@@ -1,6 +1,7 @@
 
 import Vue from 'vue'
-import config, { IApi, IApiContent, Verb } from '@/api/app'
+import app, { IApi, IApiContent, Verb } from '@/api/app'
+import config from '@/config'
 import axios, { AxiosPromise } from 'axios'
 import _ from 'lodash'
 const qs = require('querystring');
@@ -29,6 +30,7 @@ class SpidService implements ISpidService{
     
    
     hostname:string
+    port:number
    // baseUrl:string
    self:SpidService
     constructor(){
@@ -36,17 +38,17 @@ class SpidService implements ISpidService{
         //console.log("creating new instance of LoginService")
         this.self=this;
         this.hostname=location.hostname
-
+        this.port = config.back_port
     }
 
     get baseUrl(){
-        return config.service.url.formatUnicorn({host:this.hostname})
+        return app.service.url.formatUnicorn({host:this.hostname})
     }   
 
     buildReq(meth:string,data:object){
-        var api=config.service.api[meth] as IApiContent
+        var api=app.service.api[meth] as IApiContent
         var opts:IRequestOption={
-            baseURL: config.service.url.formatUnicorn({host:this.hostname}),
+            baseURL: app.service.url.formatUnicorn({host:this.hostname}),
             url:api.url,
             method:api.verb,
         }
@@ -91,9 +93,9 @@ class SpidService implements ISpidService{
     retrieveInfo(joueur:any){
 
         let reqretrieve= axios({
-            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
-            url:config.service.api.retrieveLicencieInfo.url.formatUnicorn(joueur),
-            method:config.service.api.retrieveLicencieInfo.verb,
+            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            url:app.service.api.retrieveLicencieInfo.url.formatUnicorn(joueur),
+            method:app.service.api.retrieveLicencieInfo.verb,
             //data:{licence:joueur.licence}
         })
         return new Promise((resolve,reject)=>{
@@ -109,9 +111,9 @@ class SpidService implements ISpidService{
 
     public async clubInfo(numero:string){
         let opts={
-            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
-            url:config.service.api.clubinfo.url.formatUnicorn({club:numero}),
-            method:config.service.api.clubinfo.verb
+            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            url:app.service.api.clubinfo.url.formatUnicorn({club:numero}),
+            method:app.service.api.clubinfo.verb
         }
        
         let req= axios(opts)
@@ -129,9 +131,9 @@ class SpidService implements ISpidService{
 
     public async joueurInfo(licence: string): Promise<{}> {
         let opts={
-            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
-            url:config.service.api.joueurinfo.url.formatUnicorn({licence:licence}),
-            method:config.service.api.clubinfo.verb
+            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            url:app.service.api.joueurinfo.url.formatUnicorn({licence:licence}),
+            method:app.service.api.clubinfo.verb
         }
        
         let req= axios(opts)
@@ -149,9 +151,9 @@ class SpidService implements ISpidService{
 
     public async equipes(numero: string,phase:string): Promise<{}> {
         let opts={
-            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
-            url:config.service.api.equipes.url.formatUnicorn({club:numero,type:'A'}),
-            method:config.service.api.equipes.verb
+            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            url:app.service.api.equipes.url.formatUnicorn({club:numero,type:'A'}),
+            method:app.service.api.equipes.verb
         }
        
         let req= axios(opts)
@@ -171,9 +173,9 @@ class SpidService implements ISpidService{
         let query=qs.parse(lien)
         //console.log(query)
         let opts={
-            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
-            url:config.service.api.classementequipe.url.formatUnicorn(query),
-            method:config.service.api.equipes.verb
+            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            url:app.service.api.classementequipe.url.formatUnicorn(query),
+            method:app.service.api.equipes.verb
         }
         //console.log(opts)
         let req= axios(opts)
@@ -193,9 +195,9 @@ class SpidService implements ISpidService{
         let query=qs.parse(lien)
         //console.log(query)
         let opts={
-            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
-            url:config.service.api.resultatequipe.url.formatUnicorn(query),
-            method:config.service.api.equipes.verb
+            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            url:app.service.api.resultatequipe.url.formatUnicorn(query),
+            method:app.service.api.equipes.verb
         }
         //console.log(opts)
         let req= axios(opts)
@@ -215,9 +217,9 @@ class SpidService implements ISpidService{
         let query=qs.parse(lien)
         //console.log(query)
         let opts={
-            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
-            url:config.service.api.detailrencontre.url.formatUnicorn(query),
-            method:config.service.api.equipes.verb
+            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            url:app.service.api.detailrencontre.url.formatUnicorn(query),
+            method:app.service.api.equipes.verb
         }
         //console.log(opts)
         let req= axios(opts)
@@ -235,9 +237,9 @@ class SpidService implements ISpidService{
 
     public async joueurParties(licence: string): Promise<{}> {
         let opts={
-            baseURL: config.service.url.formatUnicorn({host:location.hostname}),
-            url:config.service.api.joueurparties.url.formatUnicorn({licence:licence}),
-            method:config.service.api.clubinfo.verb
+            baseURL: app.service.url.formatUnicorn({host:location.hostname}),
+            url:app.service.api.joueurparties.url.formatUnicorn({licence:licence}),
+            method:app.service.api.clubinfo.verb
         }
        
         let req= axios(opts)
