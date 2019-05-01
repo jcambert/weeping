@@ -3,8 +3,8 @@ version: '3.7'
 services:
   weeping_front:
     build: 
-      context: ./front/weeping/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./front/weeping/Dockerfile
     image: weeping_front:1.0
     ports: 
       - "${FRONT_PORT}:80"
@@ -16,8 +16,8 @@ services:
 
   weeping_back:
     build:
-      context: ./back/weeping/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./back/weeping/Dockerfile
     image: weeping_back:1.0
     ports: 
       - "${BACK_PORT}:1337"
