@@ -22,7 +22,7 @@
                     </v-list-tile-action>
                     
                 </v-list-tile>
-                <v-divider inset></v-divider>
+                <v-divider inset :key="index"></v-divider>
             </template>
             
         </v-list>

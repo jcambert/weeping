@@ -64,18 +64,18 @@
 
 <script>
 import AppToolbar from '@/components/AppToolbar';
-import AppDrawer from '@/components/AppDrawer';
+//import AppDrawer from '@/components/AppDrawer';
 import AppFab from '@/components/AppFab';
-import AppEvents from  './event';
-import PageHeader from '@/components/PageHeader';
+import AppEvents from  '@/events';
+//import PageHeader from '@/components/PageHeader';
 import ThemeSettings from '@/components/ThemeSettings';
 import {spidService} from '@/services/spid.ts'
 export default {
   components:{
     AppToolbar,
-    AppDrawer,
+    //AppDrawer,
     AppFab,
-    PageHeader,
+    //PageHeader,
     ThemeSettings
   },
   data: ()=>({

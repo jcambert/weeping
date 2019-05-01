@@ -126,7 +126,7 @@ export default {
                 res['a'].total+=ja.points
                 res['b'].total+=jb.points
             })
-            console.log(res)
+            //console.log(res)
             _.forEach(_.filter(this.rencontre.partie,p=>p.ja!="Double"),partie=>{
                 //console.log(partie)
                 var ja=_.findIndex( res['a'].joueurs,j=>j.nom==partie.ja)
@@ -146,7 +146,7 @@ export default {
                 res['b'].joueurs[jb].total+=points.pointb
                 //console.log(points)
             })
-            console.log(res)
+            //console.log(res)
             return res
            
         }

@@ -77,7 +77,9 @@ export default {
         href: '#',
         title: 'Profile',
         click: (e) => {
+           /* eslint-disable no-console */
           console.log(e);
+          /* eslint-enable no-console */
         }
       },
       {
@@ -85,7 +87,9 @@ export default {
         href: '#',
         title: 'Settings',
         click: (e) => {
+          /* eslint-disable no-console */
           console.log(e);
+          /* eslint-enable no-console */
         }
       },
       {

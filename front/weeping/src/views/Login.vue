@@ -58,11 +58,11 @@
 
 <script>
 import Appconfig from "@/api/app";
-import alertError from '@/components/widgets/AlertError.vue'
+//import alertError from '@/components/widgets/AlertError.vue'
 import ThemeSettings from '@/components/ThemeSettings';
 export default {
   components:{
-    'alert-error':alertError,
+   // 'alert-error':alertError,
     ThemeSettings
   },
   data: () => ({

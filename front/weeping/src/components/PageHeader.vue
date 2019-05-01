@@ -23,6 +23,11 @@ export default {
       title: ''
     };
   },
+  method:{
+    setTitle(title){
+      this.title=title
+    }
+  },
   computed: {
     breadcrumbs: function () {
       let breadcrumbs = [];
@@ -34,11 +39,11 @@ export default {
           if (child) {
             breadcrumbs.push(item.title);
             breadcrumbs.push(child.title);
-            this.title = child.title;
+            this.setTitle( child.title);
           }
         } else {
           if (item.name === this.$route.name) {
-            this.title = item.title;
+            this.setTitle( item.title);
             breadcrumbs.push(item.title);
           }
         }

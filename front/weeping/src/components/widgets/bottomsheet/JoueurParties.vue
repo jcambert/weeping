@@ -66,7 +66,6 @@ export default {
             default:false
         },
         parties:{
-            type:Array,
             required:false,
             default:[]
         },
@@ -85,8 +84,8 @@ export default {
             var p={}
 
             ja.points=this.joueur.valcla
-            this.joueur.pointsParties=0
-            this.pointsDate={}
+            this.clearJoueurPointsPartie()
+            this.clearPointsDate()
             var res= _.groupBy(
                 _.forEach(this.parties,partie=>{
                      
@@ -96,10 +95,10 @@ export default {
                     var points=window.spid.calculPoints({ja:ja,jb:jb},p)
                     //console.log(p,points,'1')
                     partie.points = points.pointa
-                    this.joueur.pointsParties+=partie.points
+                    this.addJoueurPointsPartie(partie.points)
                     if(!( partie.date in this.pointsDate))
-                        this.pointsDate[partie.date]=0
-                    this.pointsDate[partie.date]+=partie.points
+                        this.clearPointsDate(partie.date)
+                    this.addPointsDate(partie.date,partie.points)
                 }),
             'date')
 
@@ -112,7 +111,26 @@ export default {
         },
         nop(){
 
-        }
+        },
+        clearPointsDate(date){
+            if(!date)
+                this.pointsDate={}
+            else
+                this.pointsDate[date]=0
+        },
+        addPointsDate(date,points){
+             this.pointsDate[date]+=points
+        },
+        addJoueurPointsPartie(points){
+            this.joueur.pointsParties+=points
+        },
+        setJoueurPointsPartie(points){
+            this.joueur.pointsParties=points
+        },
+        clearJoueurPointsPartie(){
+            this.joueur.pointsParties=0
+        },
+        
     }
 }
 </script>

@@ -40,7 +40,7 @@
 
 <script>
 import BaseCard from '@/components/widgets/card/BaseCard.vue'
-import ProfileCard from '@/components/widgets/card/ProfileCard.vue'
+//import ProfileCard from '@/components/widgets/card/ProfileCard.vue'
 import ClubCard from '@/components/widgets/card/ClubCard.vue'
 import JoueurCard from '@/components/widgets/card/JoueurCard.vue'
 import EquipeCard from '@/components/widgets/card/EquipesCard.vue'
@@ -53,7 +53,7 @@ export default {
     components:{
         VuePerfectScrollbar,
         'base-card':BaseCard,
-        'profile-card':ProfileCard,
+        //'profile-card':ProfileCard,
         'club-card':ClubCard,
         'joueur-card':JoueurCard,
         'equipes-card':EquipeCard,
@@ -74,14 +74,10 @@ export default {
         
         wantShowResultat(id){
             this.$store.dispatch('selectEquipe',id);
-            //_.forEach(this.equipes,equipe=>equipe.selected=false)
-            console.log("want show resultat for ",id)
-            //equipe.selected=true
+            
             this.showResultatSheet=true
         },
         wantShowDetailRencontre(rencontre){
-           // alert('wantShowDetailRencontre')
-           // console.log(rencontre)
             this.$store.dispatch('getDetailRencontre',rencontre.lien)
             this.showDetailRencontre=true
         },
@@ -129,7 +125,6 @@ export default {
     },
     watch:{
         user(newval){
-           // console.log("new user:",newval)
             this.$store.dispatch('getClubInfo',{numero:newval.club})
             this.$store.dispatch('getJoueurInfo',{licence:newval.licence})
             this.$store.dispatch('getJoueurParties',{licence:newval.licence})
@@ -139,7 +134,6 @@ export default {
             this.$store.dispatch('getEquipes',{numero:newval.numero})
         },
         equipes(newval){
-           // console.log('equipes')
             _.forEach(newval,equipe=>{
                 this.$store.dispatch('getClassementEquipe',{ equipe:equipe})
                 this.$store.dispatch('getResultatEquipe',{ equipe:equipe})
@@ -152,7 +146,6 @@ export default {
     },
     mounted(){
         if(this.user){
-           // console.log(this.user.club)
             this.$store.dispatch('getClubInfo',{numero:this.user.club})
             this.$store.dispatch('getJoueurInfo',{licence:this.user.licence})
             this.$store.dispatch('getJoueurParties',{licence:this.user.licence})

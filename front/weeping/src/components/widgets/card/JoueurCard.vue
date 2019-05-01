@@ -50,7 +50,7 @@ export default {
             required:true 
         },
         parties:{
-            type:Array,
+          //  type:Array,
             required:false,
             default:[]
         }

@@ -24,7 +24,9 @@ const vuexLocal = new VuexPersistence({
 const store = new Vuex.Store<IRootState>({/*plugins:[vuexLocal.plugin]*/});
 import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorators'
 
-
+export interface ILoaders{
+    [key: string]: boolean;
+}
 @Module({ dynamic: true, store:store,name:'app'})
  class ApplicationStore extends VuexModule /*implements IAppState*/{
      
@@ -39,7 +41,7 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
     joueurparties_:Array<any>=[]
     loading_:boolean=false
     error_=null
-    loaders_={clubinfo:false,joueurinfo:false,equipes:false,classementequipe:false,detailrencontre:false,joueurparties:false}
+    loaders_:ILoaders={clubinfo:false,joueurinfo:false,equipes:false,classementequipe:false,detailrencontre:false,joueurparties:false}
 
     categorieAge_= {
         'N': { value: 'Non determiné' },
@@ -269,13 +271,13 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
     SELECT_EQUIPE(id:any){
         _.forEach(this.equipes_,e=>{
             e.selected=false
-            console.log(e)
+           // console.log(e)
         })
         let equipe=_.find(this.equipes_,(e:any):boolean=>{return e.id==id})
-        console.log(equipe)
+        //console.log(equipe)
         if(!_.isUndefined(equipe))
             equipe.selected=true
-        console.log(this.equipes_)
+        //console.log(this.equipes_)
     }
     public get selectedEquipe(){
         return _.find(this.equipes_,e=>e.selected)
@@ -288,7 +290,7 @@ import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorat
 
     @Action({commit:'SELECT_EQUIPE'})
     public selectEquipe(payload:any){
-        console.log(payload.id)
+        //console.log(payload.id)
         return payload.id
     }
 

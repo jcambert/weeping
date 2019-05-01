@@ -17,7 +17,6 @@ export default {
 
   methods: {
     onScroll () {
-        console.log("scrolling");
       if (typeof window === 'undefined') return;
 
       const top = window.pageYOffset ||

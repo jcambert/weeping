@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-list   class="pa-0">
-            <v-template v-for="(clt,index) in classement">
+            <v-template v-for="(clt,index) in classement" :key="index">
                 <v-list-tile href="#"  :key="index">
                     <v-list-tile-action>
                         <v-icon color="primary">group</v-icon>

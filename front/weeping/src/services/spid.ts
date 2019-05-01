@@ -219,12 +219,12 @@ class SpidService implements ISpidService{
             url:config.service.api.detailrencontre.url.formatUnicorn(query),
             method:config.service.api.equipes.verb
         }
-        console.log(opts)
+        //console.log(opts)
         let req= axios(opts)
         return new Promise((resolve,reject)=>{
             req
             .then((resp:any)=>{
-                console.log(resp.data.liste)
+              //  console.log(resp.data.liste)
                 resolve(resp.data.liste)
             })
             .catch(error=>{

@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const VueAxios=function (vue: typeof Vue,ax:typeof axios){
     if (!axios) {
-        console.error('You have to install axios')
+       // console.error('You have to install axios')
         return
     }
    vue.prototype.axios = ax
