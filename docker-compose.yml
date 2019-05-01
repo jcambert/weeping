@@ -21,7 +21,7 @@ services:
     image: weeping_back:1.0
     ports: 
       - "${BACK_PORT}:1337"
-    volumes:
-      - ./back/weeping/:/usr/src/app
+    #volumes:
+    #  - ./back/weeping/:/usr/src/app
     #command: ["node","/usr/src/app/app.js"]
   

@@ -1,9 +1,9 @@
 # Instructions from the app developer
 # - you should use the 'node' official image, with the alpine 6.x branch
-FROM node:8.12-alpine
+FROM alpine:latest
 
+RUN apk add --update nodejs
 RUN apk add g++ make python
-
 
 RUN npm install node-gyp -g
 RUN npm install nodemon -g
@@ -18,15 +18,14 @@ RUN mkdir -p /usr/src/app
 RUN chmod -R 777 /usr/src/app
 # - Node uses a "package manager", so it needs to copy in package.json file
 WORKDIR /usr/src/app
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
-ENV NODE_PATH /usr/src/app/node_modules/:$NODE_PATH
-ADD package.json .
+ENV NODE_PATH /usr/src/app/:$NODE_PATH
+COPY package.json package.json
 
 # - then it needs to run 'npm install' to install dependencies from that file
 RUN npm install 
 # - to keep it clean and small, run 'npm cache clean --force' after above
 # - then it needs to copy in all files from current directory
-ADD . .
+ADD . /usr/src/app
 
 RUN pwd
 RUN ls -la
@@ -35,4 +34,4 @@ RUN ls -la
 # CMD ["forever", "start" ,"./app.js","--prod"]
 # CMD ["node","./app.js","--prod"]
 EXPOSE 1337
-CMD ["sails","lift"]
+CMD ["node","./app.js"]
