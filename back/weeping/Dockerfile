@@ -11,6 +11,12 @@ RUN mkdir -p /usr/src/app
 # - Node uses a "package manager", so it needs to copy in package.json file
 WORKDIR /usr/src/app
 COPY package.json package.json 
+RUN apk add --no-cache --virtual .gyp \
+        python \
+        make \
+        g++ \
+    && apk del .gyp
+
 RUN  npm install sails -g
 # - then it needs to run 'npm install' to install dependencies from that file
 RUN npm install 
