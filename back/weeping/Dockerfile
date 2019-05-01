@@ -2,7 +2,7 @@
 # - you should use the 'node' official image, with the alpine 6.x branch
 FROM alpine:latest
 
-RUN apk add --update nodejs
+RUN apk add --update nodejs nodejs-npm
 RUN apk add g++ make python
 
 RUN npm install node-gyp -g
