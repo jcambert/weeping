@@ -16,7 +16,7 @@ services:
 
   weeping_back:
     build:
-      context: ./back/weeping
+      context: ./back/weeping/
       dockerfile: Dockerfile
     image: weeping_back:1.0
     ports: 

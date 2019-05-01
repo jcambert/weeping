@@ -20,8 +20,6 @@ RUN chmod -R 777 /usr/src/app
 WORKDIR /usr/src/app
 ADD package.json .
 
-
-
 # - then it needs to run 'npm install' to install dependencies from that file
 RUN npm install 
 # - to keep it clean and small, run 'npm cache clean --force' after above
