@@ -1,6 +1,9 @@
 # Instructions from the app developer
 # - you should use the 'node' official image, with the alpine 6.x branch
-FROM node:alpine
+FROM node:8.12-alpine
+
+RUN apk add g++ make python
+
 # - this app listens on port 3000, but the container should launch on port 80
   #  so it will respond to http://localhost:80 on your computer
 EXPOSE 1337
@@ -11,11 +14,6 @@ RUN mkdir -p /usr/src/app
 # - Node uses a "package manager", so it needs to copy in package.json file
 WORKDIR /usr/src/app
 COPY package.json package.json 
-RUN apk add --no-cache --virtual .gyp \
-        python \
-        make \
-        g++ \
-    && apk del .gyp
 
 RUN  npm install sails -g
 # - then it needs to run 'npm install' to install dependencies from that file
