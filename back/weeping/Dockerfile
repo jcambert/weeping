@@ -35,4 +35,4 @@ RUN ls -la
 # CMD ["forever", "start" ,"./app.js","--prod"]
 # CMD ["node","./app.js","--prod"]
 EXPOSE 1337
-CMD ["node","app.js"]
+CMD ["sails","lift"]
