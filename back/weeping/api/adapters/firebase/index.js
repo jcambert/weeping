@@ -156,7 +156,7 @@ module.exports = {
       var manager;//<< (see the other TODO just above here)
 
       datastoreConfig = Object.assign({},datastoreConfig,{credential:sails.config.firebase});
-     // console.log(datastoreConfig);
+      console.log(datastoreConfig);
       manager = admin.initializeApp({
         credential:admin.credential.cert(datastoreConfig.credential),
         databaseURL:datastoreConfig.url

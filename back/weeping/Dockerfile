@@ -28,7 +28,7 @@ RUN npm install
 ADD . /usr/src/app
 
 RUN pwd
-RUN ls -la
+RUN ls -la ./config
 
 # - then it needs to start container with command 'tini -- node ./bin/www'
 # CMD ["forever", "start" ,"./app.js","--prod"]
