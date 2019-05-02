@@ -13,6 +13,7 @@ declare global {
   }
   interface String {
     formatUnicorn(...arg:any) : string;
+    capitalize():string;
   }
 
   interface Window{

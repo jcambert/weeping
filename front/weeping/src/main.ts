@@ -35,3 +35,8 @@ function (this:string,...arg:any):string {
 
     return str;
 };
+
+String.prototype.capitalize = String.prototype.capitalize ||
+function(this:string){
+    return this.charAt(0).toUpperCase() + this.slice(1)
+}

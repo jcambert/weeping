@@ -178,6 +178,7 @@ export interface ILoaders{
             
         })
         .catch(error=>{
+            console.log(error);
             this.context.commit('SET_LOADING',false)
             this.context.commit('SET_ERROR',error)
             window.getApp.$emit('APP_REQUEST_ERROR',error);

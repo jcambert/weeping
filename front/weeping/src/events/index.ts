@@ -30,7 +30,7 @@ export default [
           window.getApp.snackbar = {
                 show: true,
                 color: 'red',
-                text: e
+                text: e.message
             };
         }
       },

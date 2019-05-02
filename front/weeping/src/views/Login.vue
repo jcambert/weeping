@@ -17,7 +17,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn block  @click="login" :disabled="loading" :loading="loading">
+                <v-btn block  @click="login" :disabled="loading || !formValid" :loading="loading">
                     Entrer 
                     <template v-slot:loader>
                       <span  class="custom-loader">
@@ -68,7 +68,7 @@ export default {
   data: () => ({
     config:Appconfig,
     rightDrawer: false,
-    licence: "905821",
+    licence: "",
     prenom: "",
     valid: false,
     licenceRules: [v => !!v || 'Votre numero de licence ou votre nom sont requis'],

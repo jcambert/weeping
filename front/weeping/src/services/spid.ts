@@ -62,15 +62,15 @@ class SpidService implements ISpidService{
         //console.log(opts)
         return opts
     }
-    public login(licence:string,prenom?:string|""){
+    public login(licence:string,prenom:string|""){
         //console.log(this);
         var data:{}
         if(_.isFinite(parseInt(licence)))
             data={licence:licence}
         else
             data={
-                licence:licence,
-                prenom:prenom
+                nom:licence.toUpperCase(),
+                prenom:prenom.capitalize()
             }
         let req= axios(this.buildReq('login',data) )
         //console.log(reqlogin)
@@ -82,7 +82,7 @@ class SpidService implements ISpidService{
                 if(resp.data.liste.joueur)
                     resolve(resp.data.liste.joueur);
                 else    
-                    reject(Object.assign({},resp, {message:"Veuillez saisir les informations d'identification"}));
+                    reject(Object.assign({},resp, {message:"Veuillez saisir des informations d'identification correctes"}));
             })
            
             .catch(error=>{
