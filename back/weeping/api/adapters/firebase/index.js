@@ -152,10 +152,13 @@ module.exports = {
     // This is where you should store any custom metadata specific to this datastore.
     //
     // > TODO: Replace this setTimeout with real logic that creates the manager.
+    var env_fb=process.env.FIREBASE || sails.config.firebase
+    if(_.isUndefined(env_fb))
+      return done(new Error('you must set firebase credential either in NODE_ENV or in config/local.js'))
     setTimeout(() => {
       var manager;//<< (see the other TODO just above here)
 
-      datastoreConfig = Object.assign({},datastoreConfig,{credential:sails.config.firebase});
+      datastoreConfig = Object.assign({},datastoreConfig,{credential:/*sails.config.firebase*/ env_fb});
       console.log(datastoreConfig);
       manager = admin.initializeApp({
         credential:admin.credential.cert(datastoreConfig.credential),
