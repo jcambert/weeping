@@ -14,7 +14,7 @@
         label="Rechercher"
         class="hidden-sm-and-down"
         dark
-
+        v-model="searchTerm"
         >
       </v-text-field>
       <v-spacer></v-spacer>
@@ -69,8 +69,15 @@ export default {
   components: {
     NotificationList
   },
+  props:{
+    debounce:{
+      type:Number,
+      default:700
+    }
+  },
   data: () => ({
     config:Appconfig,
+    searchTerm:"",
     items: [
       {
         icon: 'account_circle',
@@ -113,6 +120,19 @@ export default {
     },
     handleFullScreen () {
       Util.toggleFullScreen();
+    },
+    handleSearch(value){
+     
+      this.$emit('input', value)
+    },
+
+  },
+  created:function(){
+    this.debouncedGetAnswer = _.debounce(()=>this.$emit("input",this.searchTerm), this.debounce)
+  },
+  watch:{
+    searchTerm(old_,new_){
+      this.debouncedGetAnswer()
     }
   }
 };

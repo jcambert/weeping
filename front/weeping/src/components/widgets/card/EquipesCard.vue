@@ -2,7 +2,7 @@
     <v-card>
 
         <v-list two-line class="pa-0">
-            <template v-for="(equipe,index) in equipes" >
+            <div v-for="(equipe,index) in equipes" :key="index">
                 <v-list-tile href="#" >
                     
                     <v-list-tile-action>
@@ -23,7 +23,7 @@
                     
                 </v-list-tile>
                 <v-divider inset ></v-divider>
-            </template>
+            </div>
             
         </v-list>
         

@@ -49,6 +49,8 @@ module.exports = {
 
     if(inputs.nom)
       inputs.nom = inputs.nom.toUpperCase();
+    if(inputs.prenom)
+      inputs.prenom = inputs.prenom.capitalize()
     if(!inputs.valid)
       inputs.valid=0;
     weep.spid.joueur_liste_spid(inputs)

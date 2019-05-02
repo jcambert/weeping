@@ -2,6 +2,12 @@
 var events = require('events');
 var fs = require('fs');
 
+
+String.prototype.capitalize = String.prototype.capitalize || 
+function(){
+    return this.charAt(0).toUpperCase() + this.slice(1)
+}
+
 var weep ={}
 weep = new events.EventEmitter();
 weep.send = function(eventname,...args){

@@ -3,7 +3,7 @@
      <template v-if="!$route.meta.public">
       <v-app id="inspire" class="app" :dark="$vuetify.dark">
           <!--<app-drawer class="app--drawer"></app-drawer>-->
-          <app-toolbar class="app--toolbar"></app-toolbar>
+          <app-toolbar class="app--toolbar" @input="onSearch"></app-toolbar>
           <v-content>
             <!-- Page Header -->
            <!--<page-header v-if="$route.meta.breadcrumb"></page-header>-->
@@ -81,6 +81,7 @@ export default {
   data: ()=>({
     expanded: true,
     rightDrawer: false,
+    searchTerm:"",
     snackbar: {
       show: false,
       text: '',
@@ -101,8 +102,18 @@ export default {
     openThemeSettings () {
       this.$vuetify.goTo(0);
       this.rightDrawer = (!this.rightDrawer);
+    },
+    onSearch(value){
+     // console.log(value)
+      this.$store.dispatch("searchTerm",value);
     }
   },
+  watch:{
+    /*searchTerm(newVal){
+      if(newVal)
+        this.$store.dispatch("searchTerm",newVal);
+    }*/
+  }
 
 }
 </script>

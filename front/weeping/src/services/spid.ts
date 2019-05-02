@@ -5,7 +5,13 @@ import config from '@/config'
 import axios, { AxiosPromise } from 'axios'
 import _ from 'lodash'
 const qs = require('querystring');
+export interface IJoueursListe{
+    club?:string
+    licence?:string
+    nom?:string
+    prenom?:string
 
+}
 export interface ISpidService{
     calculPoints(joueurs:any,partie:any):{}
     login(licence:string,prenom?:string|""):Promise<{}>
@@ -16,6 +22,9 @@ export interface ISpidService{
     resultatEquipe(lien: string): Promise<{}>
     detailRencontre(lien:string):Promise<{}>
     joueurParties(licence:string):Promise<{}>
+    searchTerm(searchTerm:string):Promise<{}>
+    joueurs(payload:IJoueursListe):Promise<{}>
+    clubs(payload:any):Promise<{}>
 }
 interface IRequestOption{
     baseURL:string
@@ -53,9 +62,12 @@ class SpidService implements ISpidService{
             method:api.verb,
         }
         // eslint-disable-next-line
-        console.log(opts)
+        //console.log(opts)
         if(api.verb==Verb.GET){
-            opts.url=opts.url.formatUnicorn(data)
+            if(api.useQuery)
+                opts.url=opts.url.concat(qs.stringify(data) )
+            else
+                opts.url=opts.url.formatUnicorn(data)
         }
         if(api.verb==Verb.POST)
             opts.data=data
@@ -259,6 +271,77 @@ class SpidService implements ISpidService{
 
     public calculPoints(joueurs:any,partie:any):{}{
         return calculPoints(joueurs,partie)
+    }
+
+    public async joueurs(payload:IJoueursListe):Promise<{}>{
+        /*let opts={
+            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
+            url:app.service.api.joueurs.url,
+            method:app.service.api.clubinfo.verb
+        }
+        console.log(opts)*/
+        var opts=this.buildReq('joueurs',payload)
+        var req= axios(opts)
+        return new Promise((resolve,reject)=>{
+            req
+            .then((resp:any)=>{
+               // console.log(resp)
+                resolve(resp.data.liste)
+            })
+            .catch(error=>{
+                reject(error)
+            })
+        })
+    }
+
+    public async clubs(payload:any):Promise<{}>{
+        var opts=this.buildReq('clubs',payload)
+        var req= axios(opts)
+        return new Promise((resolve,reject)=>{
+            req
+            .then((resp:any)=>{
+               // console.log(resp)
+                resolve(resp.data.liste)
+            })
+            .catch(error=>{
+                reject(error)
+            })
+        })
+    }
+    public async searchTerm(searchTerm:string):Promise<{}>{
+        var terms = searchTerm.split(' ')
+        var result:any[]=[];
+        var promises:any[]=[];
+        for (let index = 0; index < terms.length; index++) {
+            const term = terms[index];
+            //console.log(parseInt(term))
+            if(_.isFinite(parseInt(term))){
+               // console.log('1')
+                promises.push( this.joueurs({licence:term}))
+                promises.push(this.clubInfo(term))
+            }else{
+               // console.log('2')
+                promises.push(this.clubs({ville:term}))
+                if(!_.isUndefined(terms[index+1])){
+                  //  console.log('3')
+                    promises.push(this.joueurs({nom:term,prenom:terms[index+1]}))
+                    index+=1
+                }else{
+                   // console.log('4')
+                    promises.push(this.joueurs({nom:term}))
+                }
+            }
+        }
+       
+
+        return Promise.all(promises).then( (_results:any[])=>{
+            return _results
+        }).then((res)=>{
+            return new Promise((resolve,reject)=>{
+                resolve(res);
+            })
+        })
+        
     }
 }
 

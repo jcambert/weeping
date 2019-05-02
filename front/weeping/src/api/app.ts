@@ -29,6 +29,7 @@ export interface IApi{
 export interface IApiContent{
     verb:Verb
     url:string
+    useQuery?:boolean
 }
 const app:IApplicationConfiguration={
     name:"WeePing",
@@ -78,6 +79,16 @@ const app:IApplicationConfiguration={
             joueurparties:{
                 verb:Verb.GET,
                 url:'joueur-parties/{licence}'
+            },
+            joueurs:{
+                verb:Verb.GET,
+                url:'spid/joueur-liste-spid?',
+                useQuery:true
+            },
+            clubs:{
+                verb:Verb.GET,
+                url:'spid/club-liste?',
+                useQuery:true
             }
         }
     }

@@ -42,6 +42,7 @@ export interface ILoaders{
     loading_:boolean=false
     error_=null
     loaders_:ILoaders={clubinfo:false,joueurinfo:false,equipes:false,classementequipe:false,detailrencontre:false,joueurparties:false}
+    searchTermResponse_:any[]=[]
 
     categorieAge_= {
         'N': { value: 'Non determiné' },
@@ -81,6 +82,7 @@ export interface ILoaders{
         this.context.commit('SET_JOUEUR_PARTIES',[])
         this.context.commit('CLEAR_CLASSEMENT_EQUIPE')
         this.context.commit('CLEAR_RESULTAT_EQUIPE')
+        this.context.commit('SET_SEARCHTERM_RESPONSE',[])
         return ""
     }
 
@@ -178,7 +180,7 @@ export interface ILoaders{
             
         })
         .catch(error=>{
-            console.log(error);
+           // console.log(error);
             this.context.commit('SET_LOADING',false)
             this.context.commit('SET_ERROR',error)
             window.getApp.$emit('APP_REQUEST_ERROR',error);
@@ -448,6 +450,34 @@ export interface ILoaders{
             .catch(error=>{
                 this.context.commit('SET_LOADING',false)
                 this.context.commit('SET_LOADER',{joueurparties:false})
+                this.context.commit('SET_ERROR',error)
+                window.getApp.$emit('APP_REQUEST_ERROR',error);
+            })
+    }
+
+
+
+    @Mutation
+    SET_SEARCHTERM_RESPONSE(payload:any[]){
+        this.searchTermResponse_.splice(0,this.searchTermResponse_.length)
+        _.forEach(payload,r=>{
+            this.searchTermResponse_.push(r)
+        })
+    }
+
+    public get searchTermResponse(){
+        return this.searchTermResponse_
+    }
+    @Action({})
+    searchTerm(searchTerm:string){
+       // console.log("Search term",searchTerm)
+       this.context.commit('SET_SEARCHTERM_RESPONSE',[])
+        window.spid.searchTerm(searchTerm)
+            .then((resp:any)=>{
+               // console.log(resp);
+                this.context.commit('SET_SEARCHTERM_RESPONSE',resp);
+            })
+            .catch(error=>{
                 this.context.commit('SET_ERROR',error)
                 window.getApp.$emit('APP_REQUEST_ERROR',error);
             })
