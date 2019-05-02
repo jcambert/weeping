@@ -229,18 +229,17 @@ class SpidService implements ISpidService{
 
     public async detailRencontre(lien: string): Promise<{}> {
         let query=qs.parse(lien)
-        //console.log(query)
-        let opts={
+       /* let opts={
             baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
             url:app.service.api.detailrencontre.url.formatUnicorn(query),
             method:app.service.api.equipes.verb
-        }
-        //console.log(opts)
+        }*/
+        var opts=this.buildReq('detailrencontre',query)
+        
         let req= axios(opts)
         return new Promise((resolve,reject)=>{
             req
             .then((resp:any)=>{
-              //  console.log(resp.data.liste)
                 resolve(resp.data.liste)
             })
             .catch(error=>{

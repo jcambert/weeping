@@ -116,10 +116,10 @@ export default {
           return res
       },
       victoires(){
-          return  _.filter(this.parties,partie=>partie.victoire=="V").length
+          return  _.filter(this.parties,partie=>partie.victoire=="V").length || 0
       },
       defaites(){
-          return  _.filter(this.parties,partie=>partie.victoire=="D").length
+          return  _.filter(this.parties,partie=>partie.victoire=="D").length || 0
       }
     },
     watch:{
@@ -130,7 +130,7 @@ export default {
                 var pts=window.spid.calculPoints({ja:{points:parseInt(this.joueur.valcla)},jb:{points:parseInt(partie.classement)}},{scorea:partie.victoire=="V"?1:0,scoreb:partie.victoire=="D"?1:0})
                 this.pointsParties+=pts.pointa
                 //this.victoires+= partie.victoire=="V"?1:0
-                this.defaites+= partie.victoire=="D"?1:0
+                //this.defaites+= partie.victoire=="D"?1:0
             })
             
         }

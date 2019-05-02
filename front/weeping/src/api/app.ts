@@ -83,7 +83,8 @@ const app:IApplicationConfiguration={
             },
             detailrencontre:{
                 verb:Verb.GET,
-                url:'detail-rencontre/{is_retour}/{phase}/{res_1}/{res_2}/{renc_id}/{equip_1}/{equip_2}/{equip_id1}/{equip_id2}'
+                url:'detail-rencontre?',
+                useQuery:true
             },
             joueurparties:{
                 verb:Verb.GET,

@@ -35,7 +35,8 @@
                                             <v-btn fab dark small slot="activator" @click="$emit('wantshowdetailrencontre',r)">
                                                 <v-icon >people</v-icon>
                                             </v-btn>
-                                            <span>Detail de la rencontre</span>
+                                            <span v-if="r.scorea!=''">Detail de la rencontre</span>
+                                            <span v-else>Joueurs possibles pour la rencontre</span>
                                         </v-tooltip>
                                     </v-list-tile-action>
                                 </v-layout>
