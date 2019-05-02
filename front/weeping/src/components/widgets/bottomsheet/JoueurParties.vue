@@ -23,8 +23,8 @@
                             <v-card-text>
                                 
                                 <v-list>
-                                    <v-list-tile  avatar @click="nop" v-for="(partie,number) in parties_" :key="number">
-                                        <v-list-tile-avatar></v-list-tile-avatar>
+                                    <v-list-tile   @click="nop" v-for="(partie,number) in parties_" :key="number">
+                                        
 
                                         <v-list-tile-content>
                                             <v-list-tile-title >{{partie.nom}}</v-list-tile-title>

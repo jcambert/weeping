@@ -14,7 +14,8 @@ export interface IApplicationConfiguration{
     alt:string
     logo:string
     dev:IApplicationDevelopperConfiguration
-    service:IApplicationServiceConfiguration
+    service:IApplicationServiceConfiguration,
+    theme:IAppTheme
 
 }
 export enum Verb{
@@ -30,6 +31,14 @@ export interface IApiContent{
     verb:Verb
     url:string
     useQuery?:boolean
+}
+export interface IAppTheme{
+    [key: string]: IAppThemeContent;
+}
+export interface IAppThemeContent{
+    sideNav: string,
+    mainNav: string,
+    sideMenu: string
 }
 const app:IApplicationConfiguration={
     name:"WeePing",
@@ -91,7 +100,62 @@ const app:IApplicationConfiguration={
                 useQuery:true
             }
         }
+    },
+    theme: {
+        blue:{
+            sideNav: 'blue',
+            mainNav: 'blue',
+            sideMenu: 'white'
+        },
+        lightBlue:{
+            sideNav: 'blue',
+             mainNav: 'white',
+             sideMenu: 'blue lighten-1'
+        },
+        teal:{
+            sideNav: 'teal',
+            mainNav: 'teal',
+            sideMenu: 'white'
+        },
+        red:{
+            sideNav: 'red',
+            mainNav: 'red',
+            sideMenu: 'green'
+        },
+        orange:{
+            sideNav: 'orange',
+            mainNav: 'orange',
+            sideMenu: 'white'
+        },
+        purple:{
+            sideNav: 'purple',
+            mainNav: 'purple',
+            sideMenu: 'white'
+        },
+        indigo:{
+            sideNav: 'indigo',
+            mainNav: 'indigo',
+            sideMenu: 'white'
+        },
+        cyan:{
+            sideNav: 'cyan',
+            mainNav: 'cyan',
+            sideMenu: 'white'
+        },
+        pink:{
+            sideNav: 'pink',
+            mainNav: 'pink',
+            sideMenu: 'white'
+        },
+        green:{
+            sideNav: 'green',
+            mainNav: 'green',
+            sideMenu: 'white'
+        }
     }
+      
+    
+      
 
 }
 

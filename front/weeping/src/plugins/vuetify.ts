@@ -7,7 +7,7 @@ Vue.use(Vuetify, {
   iconfont: 'fa4',
   customProperties: true,
   theme: {
-    primary: colors.purple,
+    primary: colors.red,
     secondary: colors.grey.darken1,
     accent: colors.shades.black,
     error: colors.red.accent3

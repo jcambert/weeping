@@ -70,6 +70,7 @@ import AppEvents from  '@/events';
 //import PageHeader from '@/components/PageHeader';
 import ThemeSettings from '@/components/ThemeSettings';
 import {spidService} from '@/services/spid.ts'
+import colors from 'vuetify/es5/util/colors'
 export default {
   components:{
     AppToolbar,
@@ -97,7 +98,14 @@ export default {
     window.getApp = this;
     window.spid = spidService;
   },
-  
+  mounted(){
+    this.$vuetify.dark=true
+    this.$vuetify.theme.primary={
+            sideNav: 'red',
+            mainNav: 'red',
+            sideManu: 'green'
+          }
+  },
   methods: {
     openThemeSettings () {
       this.$vuetify.goTo(0);
@@ -109,10 +117,6 @@ export default {
     }
   },
   watch:{
-    /*searchTerm(newVal){
-      if(newVal)
-        this.$store.dispatch("searchTerm",newVal);
-    }*/
   }
 
 }

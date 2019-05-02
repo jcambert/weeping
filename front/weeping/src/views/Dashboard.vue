@@ -25,7 +25,7 @@
                         </base-card>
                     </v-flex>
                     <v-flex lg4 sm12 xs12 v-for="(clt,key) in classementequipes" :key="key" >
-                        <base-card :title="`Classement ${clt.division}`"   >
+                        <base-card :title="`Classement ${clt.division}`"   :moreable="true" >
                             <classement-equipes-card :classement="clt.classement" ></classement-equipes-card>
                         </base-card>
                     </v-flex>

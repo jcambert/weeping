@@ -14,14 +14,14 @@
         <div class="color-option">
           <v-layout wrap>
             <label class="color-option--label flex xs6 pa-1" v-for="(option,index) in themeColorOptions" :key="index">
-              <input type="radio" name="color" v-bind:value="option.key" v-model="themeColor">
+              <input type="radio" name="color" v-bind:value="index" v-model="themeColor">
               <span class="color-option--item bg">
                 <span class="overlay">
                   <span class="material-icons">check</span>
                 </span>
-                <span class="color-option--item--header sideNav" :class="option.value.sideNav"></span>
-                <span class="color-option--item--header mainNav" :class="option.value.mainNav"></span>
-                <span class="sideMenu" :class="option.value.sideManu"></span>
+                <span class="color-option--item--header sideNav" :class="option.sideNav"></span>
+                <span class="color-option--item--header mainNav" :class="option.mainNav"></span>
+                <span class="sideMenu" :class="option.sideMenu"></span>
               </span>
             </label>
           </v-layout>
@@ -50,17 +50,19 @@
 
 <script>
 import colors from 'vuetify/es5/util/colors';
+import Appconfig from '@/api/app'
 export default {
   data () {
     return {
-      themeColor: 'indigo',
-      sideBarOption: 'light',
+      themeColor: 'red',
+      sideBarOption: 'dark',
       colors: colors
     };
   },
   computed: {
     themeColorOptions () {
-      return [
+      return Appconfig.theme
+     /* return [
         {
           key: 'blue',
           value: {
@@ -142,7 +144,7 @@ export default {
             sideManu: 'white'
           }
         }
-      ];
+      ];*/
     }
   },  
   watch: {
