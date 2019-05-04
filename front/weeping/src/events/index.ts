@@ -86,5 +86,19 @@ export default [
           window.getApp.$message.success(msg);
         }
       },
+      {
+        name:'APP_DISCONNECTED',
+        callback:function(){
+          window.getApp.$store.dispatch('setMessage',{type:'error',message:"Vous etes déconnecté du serveur"})
+          //window.getApp.$message.error("Vous etes déconnecté du serveur")
+        }
+      },
+      {
+        name:'APP_CONNECTED',
+        callback:function(){
+          window.getApp.$store.dispatch('setMessage',{type:'success',message:"Vous etes connecté au serveur"})
+          //window.getApp.$message.error("Vous etes déconnecté du serveur")
+        }
+      }
     
 ]

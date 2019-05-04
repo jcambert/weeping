@@ -1,3 +1,8 @@
+import { Level } from '@/plugins/logger';
+export interface IApplicationLoggerConfiguration{
+    level: Level
+    debug:boolean
+}
 export interface IApplicationServiceConfiguration{
     url:string
     api:IApi
@@ -15,7 +20,8 @@ export interface IApplicationConfiguration{
     logo:string
     dev:IApplicationDevelopperConfiguration
     service:IApplicationServiceConfiguration,
-    theme:IAppTheme
+    theme:IAppTheme,
+    logger:IApplicationLoggerConfiguration
 
 }
 export enum Verb{
@@ -153,6 +159,11 @@ const app:IApplicationConfiguration={
             mainNav: 'green',
             sideMenu: 'white'
         }
+    },
+    logger:{
+        level:process.env.mode == "development"? Level.DEBUG:Level.ERROR,
+        debug:process.env.mode == "development"
+        
     }
       
     

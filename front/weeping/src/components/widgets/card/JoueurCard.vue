@@ -110,7 +110,7 @@ export default {
             {text:'Prog. mensuelle',value:parseInt(this.joueur.point-this.joueur.valcla),progression:true},
             {text:'Prog. annuelle',value:parseInt(this.joueur.point-this.joueur.valinit),progression:true},
             //{text:'Points Parties',value:parseInt(this.pointsParties),progression:true},
-            {text:'Points Virtuels',value:parseInt(this.joueur.valinit)+parseInt(this.joueur.pointsParties)}
+            {text:'Points Virtuels',value:parseInt(this.joueur.valinit)+parseInt(this.pointsParties)}
           ];
           
           return res
@@ -128,9 +128,8 @@ export default {
             this.pointsParties=0
             _.forEach(parties,partie=>{
                 var pts=window.spid.calculPoints({ja:{points:parseInt(this.joueur.valcla)},jb:{points:parseInt(partie.classement)}},{scorea:partie.victoire=="V"?1:0,scoreb:partie.victoire=="D"?1:0})
+                
                 this.pointsParties+=pts.pointa
-                //this.victoires+= partie.victoire=="V"?1:0
-                //this.defaites+= partie.victoire=="D"?1:0
             })
             
         }

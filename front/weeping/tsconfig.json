@@ -11,6 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
+    "noImplicitAny": false,
     "types": [
       "webpack-env","vuetify"
     ],
@@ -31,7 +32,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx", "src/event.js"
+    "tests/**/*.tsx", "src/event.js", "src/plugins/socket/mixin.js", "src/plugins/socket/index.js", "src/plugins/socket/emitter.js", "src/plugins/sockets.js"
   ],
   "exclude": [
     "node_modules"

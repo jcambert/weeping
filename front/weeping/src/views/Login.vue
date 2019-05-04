@@ -2,6 +2,7 @@
   <v-app id="login"  :dark="$vuetify.dark">
     <v-content>
       <v-container fluid fill-height color="primary">
+        <loader :color="message.type" :message="message.message" :show="!connected" v-if="message.message"></loader>
         <v-layout column align-center justify-center>
           <v-flex xs12 sm8 md4 lg4  >
             <v-card class="elevation-1 pa-3">
@@ -57,14 +58,106 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import Appconfig from "@/api/app";
 //import alertError from '@/components/widgets/AlertError.vue'
 import ThemeSettings from '@/components/ThemeSettings';
+import Loader from '@/components/Loader.vue'
+@Component({
+  components:{
+     ThemeSettings,
+     'loader':Loader
+  },
+  props: {
+    propMessage: String
+  },
+  sockets: {
+        connect: function () {
+            //console.log('socket connected')
+            this.connected = true
+            window.getApp.$emit('APP_CONNECTED');
+        },
+        disconnect:function(){
+          this.connected = false
+          window.getApp.$emit('APP_DISCONNECTED');
+        }
+    },
+  watch:{
+    message(newval){
+     // console.log(newval.message)
+      if(_.isUndefined( newval.message))return
+
+      window.getApp.snackbar = {
+              show: true,
+              color: newval.type,
+              text: newval.message
+          };
+     
+
+    }
+  }
+})
+export default class Login extends Vue{
+  config=Appconfig
+  rightDrawer=false
+  licence=""
+  prenom=""
+  valid=false
+  licenceRules= [v => !!v || 'Votre numero de licence ou votre nom sont requis']
+  prenomRules= [v => !!v || 'Votre prenom est requis']
+  connected = false
+  login () {
+      //console.log(this.$store);
+      this.$store.dispatch('userLogin',{licence:this.licence,prenom:this.prenom})
+    
+    }
+  clearForm() {
+      this.$refs.form.reset();
+  }
+  isLicence() {
+      return /^\d+$/.test(this.licence) || this.licence=="" || this.licence == undefined;
+  }
+  onDismissed(){
+    this.$store.dispatch('clearError');
+  }
+  openThemeSettings () {
+    this.$vuetify.goTo(0);
+    this.rightDrawer = (!this.rightDrawer);
+  }
+
+  mounted(){
+    this.$store.dispatch('clearApplication')
+    this.$socket.connect()
+  }
+  get formValid() {
+      return this.valid && this.connected;
+  }
+  get loading(){
+    return this.$store.getters.loading
+  }
+  get error(){
+    return this.$store.getters.error
+  }
+  get message(){
+    return this.$store.getters.message
+  }
+
+}
+/*
 export default {
   components:{
    // 'alert-error':alertError,
-    ThemeSettings
+    ThemeSettings,
   },
+   sockets: {
+        connect: function () {
+            console.log('socket connected')
+        },
+        customEmit: function (data) {
+            console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+        }
+    },
   data: () => ({
     config:Appconfig,
     rightDrawer: false,
@@ -79,7 +172,7 @@ export default {
     login () {
       //console.log(this.$store);
       this.$store.dispatch('userLogin',{licence:this.licence,prenom:this.prenom})
-
+    
     },
     clearForm() {
         this.$refs.form.reset();
@@ -108,9 +201,10 @@ computed: {
 },
 mounted(){
   this.$store.dispatch('clearApplication')
+  
 }
 
-};
+};*/
 </script>
 <style lang="stylus" scoped>
 #login 

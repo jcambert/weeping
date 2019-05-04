@@ -1,11 +1,12 @@
 import Vue from 'vue'
-import Vuex, { StoreOptions } from 'vuex'
+import Vuex, { StoreOptions, Store,Module as Module_ } from 'vuex'
+import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorators'
 //import createPersistedState from './plugins/persist'
 import VuexPersistence from 'vuex-persist'
 import  {User,ClubInfo,UserInfo,JoueurInfo} from './modules/app'
 import * as _ from 'lodash'
 Vue.use(Vuex);
-interface IRootState {
+export interface IRootState {
     //app:IAppState
     app:ApplicationStore
 }
@@ -21,8 +22,10 @@ const vuexLocal = new VuexPersistence({
     modules:['app']
   })
 
-const store = new Vuex.Store<IRootState>({/*plugins:[vuexLocal.plugin]*/});
-import { Module, VuexModule,Mutation,Action,getModule} from 'vuex-module-decorators'
+
+
+const store = new Store<IRootState>({/*plugins:[vuexLocal.plugin]*/});
+
 
 export interface ILoaders{
     [key: string]: boolean;
@@ -43,7 +46,7 @@ export interface ILoaders{
     error_=null
     loaders_:ILoaders={clubinfo:false,joueurinfo:false,equipes:false,classementequipe:false,detailrencontre:false,joueurparties:false}
     searchTermResponse_:any[]=[]
-
+    message_={}
     categorieAge_= {
         'N': { value: 'Non determiné' },
         'P': { value: 'Poussin', desc: 'jeunes ayant 8 ans au plus' },
@@ -83,6 +86,7 @@ export interface ILoaders{
         this.context.commit('CLEAR_CLASSEMENT_EQUIPE')
         this.context.commit('CLEAR_RESULTAT_EQUIPE')
         this.context.commit('SET_SEARCHTERM_RESPONSE',[])
+        this.context.commit('SET_MESSAGE',{})
         return ""
     }
 
@@ -481,6 +485,19 @@ export interface ILoaders{
                 this.context.commit('SET_ERROR',error)
                 window.getApp.$emit('APP_REQUEST_ERROR',error);
             })
+    }
+
+    @Mutation
+    SET_MESSAGE(payload:any){
+        this.message_=_.merge({},payload)
+    }
+
+    public get message(){
+        return this.message_
+    }
+    @Action({commit:'SET_MESSAGE'})
+    setMessage(payload:any){    
+        return payload
     }
 }
 
