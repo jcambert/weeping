@@ -20,8 +20,9 @@
           </v-content>
         <!-- Go to top -->
         <app-fab></app-fab>
+        <right-menu></right-menu>
         <!-- theme setting -->
-        <v-btn small fab dark falt fixed top="top" right="right" class="setting-fab" color="red" @click="openThemeSettings">
+        <!--<v-btn small fab dark falt fixed top="top" right="right" class="setting-fab" color="red" @click="openThemeSettings">
           <v-icon>settings</v-icon>
         </v-btn>
         <v-navigation-drawer
@@ -34,7 +35,7 @@
           >
           <theme-settings></theme-settings>
         </v-navigation-drawer> 
-
+        -->
         
       </v-app>
     </template>
@@ -63,41 +64,45 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppToolbar from '@/components/AppToolbar';
 //import AppDrawer from '@/components/AppDrawer';
 import AppFab from '@/components/AppFab';
 import AppEvents from  '@/events';
 //import PageHeader from '@/components/PageHeader';
-import ThemeSettings from '@/components/ThemeSettings';
+//import ThemeSettings from '@/components/ThemeSettings';
 import {spidService} from '@/services/spid.ts'
 import colors from 'vuetify/es5/util/colors'
-export default {
+import RightMenu from '@/components/RightMenu.vue'
+@Component({
   components:{
     AppToolbar,
     //AppDrawer,
     AppFab,
     //PageHeader,
-    ThemeSettings
+   // ThemeSettings,
+    RightMenu
   },
-  data: ()=>({
-    expanded: true,
-    rightDrawer: false,
-    searchTerm:"",
-    snackbar: {
+})
+
+export default class Application extends Vue{
+
+    expanded= true
+    //rightDrawer= false,
+    searchTerm=""
+    snackbar= {
       show: false,
       text: '',
       color: '',
     }
-  }),
-  computed: {
-  },
   created () {
     AppEvents.forEach(item => {
       this.$on(item.name, item.callback);
     });
     window.getApp = this;
     window.spid = spidService;
-  },
+  }
   mounted(){
     this.$vuetify.dark=true
     this.$vuetify.theme.primary={
@@ -105,19 +110,18 @@ export default {
             mainNav: 'red',
             sideManu: 'green'
           }
-  },
-  methods: {
-    openThemeSettings () {
-      this.$vuetify.goTo(0);
-      this.rightDrawer = (!this.rightDrawer);
-    },
-    onSearch(value){
-     // console.log(value)
-      this.$store.dispatch("searchTerm",value);
-    }
-  },
-  watch:{
   }
+
+  /*openThemeSettings () {
+    this.$vuetify.goTo(0);
+    this.rightDrawer = (!this.rightDrawer);
+  },*/
+  onSearch(value){
+    // console.log(value)
+    this.$store.dispatch("searchTerm",value);
+  }
+  
+
 
 }
 </script>

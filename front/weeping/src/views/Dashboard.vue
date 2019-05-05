@@ -31,6 +31,7 @@
                         </base-card>
                     </v-flex>
                 </v-layout>
+               
             </v-container>
         </div>
         <resultat-equipe :resultats="selectedResultat" :show="showResultatSheet" v-if="selectedResultat" v-on:close="showResultatSheet=false" v-on:wantshowdetailrencontre="wantShowDetailRencontre"></resultat-equipe>
@@ -53,7 +54,7 @@ import DetailRencontre from '@/components/widgets/bottomsheet/DetailRencontre.vu
 import JoueurParties from '@/components/widgets/bottomsheet/JoueurParties.vue'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar';
 import Loader from '@/components/Loader.vue'
-
+import RightMenu from '@/components/RightMenu.vue'
 @Component({
      components:{
         VuePerfectScrollbar,
@@ -66,7 +67,8 @@ import Loader from '@/components/Loader.vue'
         'resultat-equipe':ResultatEquipe,
         'detail-rencontre':DetailRencontre,
         'joueur-parties':JoueurParties,
-        'loader':Loader
+        'loader':Loader,
+        
     },
     watch:{
         user(newval){

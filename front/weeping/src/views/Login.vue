@@ -3,6 +3,7 @@
     <v-content>
       <v-container fluid fill-height color="primary">
         <loader :color="message.type" :message="message.message" :show="!connected" v-if="message.message"></loader>
+        
         <v-layout column align-center justify-center>
           <v-flex xs12 sm8 md4 lg4  >
             <v-card class="elevation-1 pa-3">
@@ -31,8 +32,11 @@
             </v-card>
           </v-flex>
         </v-layout>
+        <right-menu></right-menu>
+        
         <!-- theme setting -->
-        <v-btn small fab dark falt fixed top="top" right="right" class="setting-fab" color="red" @click="openThemeSettings">
+        
+        <!--<v-btn small fab dark falt fixed top="top" right="right" class="setting-fab" color="red" @click="openThemeSettings">
           <v-icon>settings</v-icon>
         </v-btn>
         <v-navigation-drawer
@@ -45,18 +49,17 @@
           >
           <theme-settings></theme-settings>
         </v-navigation-drawer> 
-         <v-btn small fab dark falt fixed top="top" right="right" class="socket-fab" color="red" @click="openThemeSettings">
-          <v-icon>settings</v-icon>
-        </v-btn>
+         -->
         <!-- App Footer -->
-            <v-footer height="auto" class="pa-3 app--footer" fixed :dark="$vuetify.dark">
-              <span class="caption">KD &copy; {{ new Date().getFullYear() }}</span>
-              <v-spacer></v-spacer>
-              <span class="caption mr-1"> Make With Love </span> <v-icon color="pink" small>favorite</v-icon>
-              <!--<div>&copy; {{ new Date().getFullYear() }}</div>-->
-            </v-footer>
+        <v-footer height="auto" class="pa-3 app--footer" fixed :dark="$vuetify.dark">
+          <span class="caption">KD &copy; {{ new Date().getFullYear() }}</span>
+          <v-spacer></v-spacer>
+          <span class="caption mr-1"> Make With Love </span> <v-icon color="pink" small>favorite</v-icon>
+          <!--<div>&copy; {{ new Date().getFullYear() }}</div>-->
+        </v-footer>
       </v-container>
     </v-content>
+    
   </v-app>
 </template>
 
@@ -65,11 +68,13 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import Appconfig from "@/api/app";
 //import alertError from '@/components/widgets/AlertError.vue'
-import ThemeSettings from '@/components/ThemeSettings';
+//import ThemeSettings from '@/components/ThemeSettings';
 import Loader from '@/components/Loader.vue'
+import RightMenu from '@/components/RightMenu.vue'
 @Component({
   components:{
-     ThemeSettings,
+     //ThemeSettings,
+     RightMenu,
      'loader':Loader
   },
   props: {
@@ -163,8 +168,5 @@ export default class Login extends Vue{
   top:50%!important; 
   right:0;
   border-radius:0  
-.socket-fab 
-  top:50%!important; 
-  right:0;
-  border-radius:0  
+
 </style>
