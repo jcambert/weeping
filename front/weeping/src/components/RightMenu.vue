@@ -24,7 +24,7 @@
             hide-overlay
             fixed
             >
-            <theme-settings></theme-settings>
+            <message></message>
         </v-navigation-drawer> 
     </div>
 </template>
@@ -33,6 +33,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import ThemeSettings from '@/components/ThemeSettings';
+import Message from '@/components/Message';
 @Component({
     components:{
      ThemeSettings

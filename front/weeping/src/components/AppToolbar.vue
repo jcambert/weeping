@@ -1,7 +1,7 @@
 <template>
   <v-toolbar
     color="primary darken-3"
-    fixed
+    
     :dark="$vuetify.dark"
     app
     >
