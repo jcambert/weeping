@@ -1,8 +1,39 @@
 import { Level } from '@/plugins/logger';
+
+
+String.prototype.formatUnicorn = String.prototype.formatUnicorn ||
+function (this:string,...arg:any):string {
+    "use strict";
+    var str:string = this;//(this as String).toString();
+    if (arg.length) {
+        var t = typeof arg[0];
+        var key;
+        var args = ("string" === t || "number" === t) ?
+            Array.prototype.slice.call(arg)
+            : arg[0];
+
+        for (key in args) {
+            str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
+        }
+    }
+
+    return str;
+};
+
+String.prototype.capitalize = String.prototype.capitalize ||
+function(this:string){
+    return this.charAt(0).toUpperCase() + this.slice(1)
+}
+
 export interface IApplicationLoggerConfiguration{
     level: Level
     debug:boolean
 }
+
+export interface IApplicationSocketConfiguration{
+    url:string
+}
+
 export interface IApplicationServiceConfiguration{
     url:string
     api:IApi
@@ -19,7 +50,8 @@ export interface IApplicationConfiguration{
     alt:string
     logo:string
     dev:IApplicationDevelopperConfiguration
-    service:IApplicationServiceConfiguration,
+    socket:IApplicationSocketConfiguration
+    service:IApplicationServiceConfiguration
     theme:IAppTheme,
     logger:IApplicationLoggerConfiguration
 
@@ -46,6 +78,9 @@ export interface IAppThemeContent{
     mainNav: string,
     sideMenu: string
 }
+export const url='http://{host}:{port}'
+export const isInDev = process.env.mode != 'production'
+export const isInProd = process.env.mode == 'production'
 const app:IApplicationConfiguration={
     name:"WeePing",
     alt:"WeePing Application for Table Tennis players",
@@ -56,8 +91,12 @@ const app:IApplicationConfiguration={
         github:"https://github.com/jcambert/weeping",
         mail:"jc.ambert@gmail.com",
     },
+    socket:{
+        url:url.formatUnicorn( process.env.SOCKET_PORT || '1337',process.env.SOCKET_LOCATION || location.hostname)
+    },
     service:{
-        url:'http://{host}:{port}/api/v1/',
+        //url:'http://{host}:{port}/api/v1/',
+        url:url.formatUnicorn( process.env.SERVICE_PORT || '1337',process.env.SERVICE_LOCATION || location.hostname).concat("/api/v1/"),
         api:{
             login:{
                 verb:Verb.POST,

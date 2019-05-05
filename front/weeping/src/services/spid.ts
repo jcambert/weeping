@@ -1,7 +1,7 @@
 
 import Vue from 'vue'
 import app, { IApi, IApiContent, Verb } from '@/api/app'
-import config from '@/config'
+
 import axios, { AxiosPromise } from 'axios'
 import _ from 'lodash'
 const qs = require('querystring');
@@ -33,31 +33,23 @@ interface IRequestOption{
     data?:object
 }
 class SpidService implements ISpidService{
-    
-    
-    
-    
-   
-    hostname:string
-    port:number
+
    // baseUrl:string
    self:SpidService
     constructor(){
        
         //console.log("creating new instance of LoginService")
         this.self=this;
-        this.hostname=location.hostname
-        this.port = config.back_port
     }
 
     get baseUrl(){
-        return app.service.url.formatUnicorn({host:this.hostname,port:this.port})
+        return app.service.url
     }   
 
     buildReq(meth:string,data:object){
         var api=app.service.api[meth] as IApiContent
         var opts:IRequestOption={
-            baseURL: app.service.url.formatUnicorn({host:this.hostname,port:this.port}),
+            baseURL: app.service.url,
             url:api.url,
             method:api.verb,
         }
@@ -106,7 +98,7 @@ class SpidService implements ISpidService{
 
     retrieveInfo(joueur:any){
         var opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
+            baseURL: app.service.url,
             url:app.service.api.retrieveLicencieInfo.url.formatUnicorn(joueur),
             method:app.service.api.retrieveLicencieInfo.verb,
             //data:{licence:joueur.licence}
@@ -125,7 +117,7 @@ class SpidService implements ISpidService{
 
     public async clubInfo(numero:string){
         var opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
+            baseURL: app.service.url,
             url:app.service.api.clubinfo.url.formatUnicorn({club:numero}),
             method:app.service.api.clubinfo.verb
         }
@@ -145,7 +137,7 @@ class SpidService implements ISpidService{
 
     public async joueurInfo(licence: string): Promise<{}> {
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
+            baseURL: app.service.url,
             url:app.service.api.joueurinfo.url.formatUnicorn({licence:licence}),
             method:app.service.api.clubinfo.verb
         }
@@ -165,7 +157,7 @@ class SpidService implements ISpidService{
 
     public async equipes(numero: string,phase:string): Promise<{}> {
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
+            baseURL: app.service.url,
             url:app.service.api.equipes.url.formatUnicorn({club:numero,type:'A'}),
             method:app.service.api.equipes.verb
         }
@@ -187,7 +179,7 @@ class SpidService implements ISpidService{
         let query=qs.parse(lien)
         //console.log(query)
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
+            baseURL: app.service.url,
             url:app.service.api.classementequipe.url.formatUnicorn(query),
             method:app.service.api.equipes.verb
         }
@@ -209,7 +201,7 @@ class SpidService implements ISpidService{
         let query=qs.parse(lien)
         //console.log(query)
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
+            baseURL: app.service.url,
             url:app.service.api.resultatequipe.url.formatUnicorn(query),
             method:app.service.api.equipes.verb
         }
@@ -250,7 +242,7 @@ class SpidService implements ISpidService{
 
     public async joueurParties(licence: string): Promise<{}> {
         let opts={
-            baseURL: app.service.url.formatUnicorn({host:location.hostname,port:config.back_port}),
+            baseURL: app.service.url,
             url:app.service.api.joueurparties.url.formatUnicorn({licence:licence}),
             method:app.service.api.clubinfo.verb
         }

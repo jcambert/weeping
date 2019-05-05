@@ -144,67 +144,6 @@ export default class Login extends Vue{
   }
 
 }
-/*
-export default {
-  components:{
-   // 'alert-error':alertError,
-    ThemeSettings,
-  },
-   sockets: {
-        connect: function () {
-            console.log('socket connected')
-        },
-        customEmit: function (data) {
-            console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
-        }
-    },
-  data: () => ({
-    config:Appconfig,
-    rightDrawer: false,
-    licence: "",
-    prenom: "",
-    valid: false,
-    licenceRules: [v => !!v || 'Votre numero de licence ou votre nom sont requis'],
-    prenomRules: [v => !!v || 'Votre prenom est requis'],
-  }),
-
-  methods: {
-    login () {
-      //console.log(this.$store);
-      this.$store.dispatch('userLogin',{licence:this.licence,prenom:this.prenom})
-    
-    },
-    clearForm() {
-        this.$refs.form.reset();
-    },
-    isLicence() {
-        return /^\d+$/.test(this.licence) || this.licence=="" || this.licence == undefined;
-    },
-    onDismissed(){
-      this.$store.dispatch('clearError');
-    },
-    openThemeSettings () {
-      this.$vuetify.goTo(0);
-      this.rightDrawer = (!this.rightDrawer);
-    }
-  },
-computed: {
-    formValid:function() {
-        return this.valid;
-    },
-    loading(){
-      return this.$store.getters.loading
-    },
-    error(){
-      return this.$store.getters.error
-    }
-},
-mounted(){
-  this.$store.dispatch('clearApplication')
-  
-}
-
-};*/
 </script>
 <style lang="stylus" scoped>
 #login 
