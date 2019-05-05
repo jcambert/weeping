@@ -45,6 +45,9 @@
           >
           <theme-settings></theme-settings>
         </v-navigation-drawer> 
+         <v-btn small fab dark falt fixed top="top" right="right" class="socket-fab" color="red" @click="openThemeSettings">
+          <v-icon>settings</v-icon>
+        </v-btn>
         <!-- App Footer -->
             <v-footer height="auto" class="pa-3 app--footer" fixed :dark="$vuetify.dark">
               <span class="caption">KD &copy; {{ new Date().getFullYear() }}</span>
@@ -157,6 +160,10 @@ export default class Login extends Vue{
   
 
 .setting-fab 
+  top:50%!important; 
+  right:0;
+  border-radius:0  
+.socket-fab 
   top:50%!important; 
   right:0;
   border-radius:0  

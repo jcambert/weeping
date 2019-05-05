@@ -92,11 +92,11 @@ const app:IApplicationConfiguration={
         mail:"jc.ambert@gmail.com",
     },
     socket:{
-        url:url.formatUnicorn( process.env.SOCKET_PORT || '1337',process.env.SOCKET_LOCATION || location.hostname)
+        url:url.formatUnicorn({port: process.env.SOCKET_PORT || '1337',host:process.env.SOCKET_LOCATION || location.hostname})
     },
     service:{
         //url:'http://{host}:{port}/api/v1/',
-        url:url.formatUnicorn( process.env.SERVICE_PORT || '1337',process.env.SERVICE_LOCATION || location.hostname).concat("/api/v1/"),
+        url:url.formatUnicorn( {port:process.env.SERVICE_PORT || '1337',host:process.env.SERVICE_LOCATION || location.hostname}).concat("/api/v1/"),
         api:{
             login:{
                 verb:Verb.POST,
