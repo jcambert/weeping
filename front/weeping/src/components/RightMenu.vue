@@ -16,16 +16,8 @@
             >
             <theme-settings></theme-settings>
         </v-navigation-drawer> 
-        <v-navigation-drawer
-            class="setting-drawer"
-            temporary
-            right
-            v-model="messagesDrawer"
-            hide-overlay
-            fixed
-            >
-            <message></message>
-        </v-navigation-drawer> 
+        
+        <message  :show="messagesDrawer" v-on:close="messagesDrawer=false" v-show="message.message"></message>
     </div>
 </template>
 
@@ -36,7 +28,8 @@ import ThemeSettings from '@/components/ThemeSettings';
 import Message from '@/components/Message';
 @Component({
     components:{
-     ThemeSettings
+     ThemeSettings,
+     Message
   },
 })
 export default class RightMenu extends Vue{
@@ -49,6 +42,9 @@ export default class RightMenu extends Vue{
     openMessages(){
         this.$vuetify.goTo(0);
         this.messagesDrawer = (!this.messagesDrawer);
+    }
+    get message(){
+        return this.$store.getters.message
     }
 }
 </script>

@@ -38,6 +38,7 @@ export interface ILoaders{
     clubinfo_:ClubInfo | undefined=undefined
     joueurinfo_:JoueurInfo | undefined=undefined
     equipes_:Array<any>=[]
+    joueurs_:Array<any>=[]
     classement_:Array<any>=[]
     resultat_:Array<any>=[]
     detailRencontre_:{}|undefined=undefined
@@ -82,6 +83,7 @@ export interface ILoaders{
         this.context.commit('SET_CLUB_INFO',undefined)
         this.context.commit('SET_DETAIL_RENCONTRE',undefined)
         this.context.commit('SET_EQUIPES',[])
+        this.context.commit('SET_JOUEURS',[])
         this.context.commit('SET_JOUEUR_PARTIES',[])
         this.context.commit('CLEAR_CLASSEMENT_EQUIPE')
         this.context.commit('CLEAR_RESULTAT_EQUIPE')
@@ -322,6 +324,33 @@ export interface ILoaders{
             })
     }
 
+    @Mutation
+    SET_JOUEURS(joueurs:[]){
+        this.joueurs_.splice(0,this.joueurs_.length)
+        _.forEach(joueurs,joueur=>this.joueurs_.push(joueur))
+    }
+    get joueurs(){
+        return this.joueurs_
+    }
+    @Action({})
+    public getJoueurs(payload:any){
+        this.context.commit('SET_JOUEURS',[])
+        this.context.commit('SET_LOADING',true)
+        this.context.commit('SET_LOADER',{joueurs:true})
+        this.context.commit('SET_ERROR',null)
+        window.spid.joueurs({club:payload.numero})
+            .then( (resp:any)=>{
+                this.context.commit('SET_JOUEURS',resp);
+                this.context.commit('SET_LOADING',false);
+                this.context.commit('SET_LOADER',{joueurs:false})
+            })
+            .catch(error=>{
+                this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_LOADER',{joueurs:false})
+                this.context.commit('SET_ERROR',error)
+                window.getApp.$emit('APP_REQUEST_ERROR',error);
+            })
+    }
     public get currentPhase():number{
         let m=new Date().getMonth()+1
         return m<=6?2:1

@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import app, { IApi, IApiContent, Verb } from '@/api/app'
 
-import axios, { AxiosPromise } from 'axios'
+import axios, { AxiosPromise, AxiosRequestConfig } from 'axios'
 import _ from 'lodash'
 const qs = require('querystring');
 export interface IJoueursListe{
@@ -26,12 +26,13 @@ export interface ISpidService{
     joueurs(payload:IJoueursListe):Promise<{}>
     clubs(payload:any):Promise<{}>
 }
-interface IRequestOption{
+/*interface IRequestOption{
     baseURL:string
     url:string
     method:string
-    data?:object
-}
+    data?:object,
+    timeout?:Number
+}*/
 class SpidService implements ISpidService{
 
    // baseUrl:string
@@ -46,16 +47,17 @@ class SpidService implements ISpidService{
         return app.service.url
     }   
 
-    buildReq(meth:string,data:object){
+    buildReq(meth:string,data:object):AxiosRequestConfig{
         var api=app.service.api[meth] as IApiContent
-        var opts:IRequestOption={
+        var opts:AxiosRequestConfig={
             baseURL: app.service.url,
             url:api.url,
             method:api.verb,
+            timeout:app.service.timeout
         }
         // eslint-disable-next-line
         //console.log(opts)
-        if(api.verb==Verb.GET){
+        if(api.verb==Verb.GET && opts.url){
             if(api.useQuery)
                 opts.url=opts.url.concat(qs.stringify(data) )
             else
@@ -276,8 +278,8 @@ class SpidService implements ISpidService{
         return new Promise((resolve,reject)=>{
             req
             .then((resp:any)=>{
-               // console.log(resp)
-                resolve(resp.data.liste)
+                //console.log(resp)
+                resolve(resp.data.liste.joueur)
             })
             .catch(error=>{
                 reject(error)

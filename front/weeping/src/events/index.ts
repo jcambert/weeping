@@ -99,6 +99,12 @@ export default [
           window.getApp.$store.dispatch('setMessage',{type:'success',message:"Vous etes connecté au serveur"})
           //window.getApp.$message.error("Vous etes déconnecté du serveur")
         }
+      },
+      {
+        name:'APP_CONNECT_ERROR',
+        callback:function(err){
+          window.getApp.$store.dispatch('setMessage',{type:'error',message:"Immpossible de connecter le server :"+ err.message})
+        }
       }
     
 ]

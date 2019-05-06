@@ -12,7 +12,7 @@
                   <img :src="config.logo" :alt="config.alt" width="120" height="120">
                   <h1 class="flex my-4 " lighten-1>{{config.name}} Identification </h1>
                 </div>                
-                <v-form  ref="form" v-model="valid">
+                <v-form  ref="form" v-model="valid"  v-on:submit.prevent="nop">
                     <v-text-field append-icon="person" name="licence" label="N° de Licence ou Nom" type="text" v-model="licence" required :rules="licenceRules"></v-text-field>
                     <v-text-field v-if="!isLicence()" append-icon="person" name="login" label="Prenom" type="text" v-model="prenom" required :rules="prenomRules"></v-text-field>
                 </v-form>
@@ -33,23 +33,7 @@
           </v-flex>
         </v-layout>
         <right-menu></right-menu>
-        
-        <!-- theme setting -->
-        
-        <!--<v-btn small fab dark falt fixed top="top" right="right" class="setting-fab" color="red" @click="openThemeSettings">
-          <v-icon>settings</v-icon>
-        </v-btn>
-        <v-navigation-drawer
-          class="setting-drawer"
-          temporary
-          right
-          v-model="rightDrawer"
-          hide-overlay
-          fixed
-          >
-          <theme-settings></theme-settings>
-        </v-navigation-drawer> 
-         -->
+
         <!-- App Footer -->
         <v-footer height="auto" class="pa-3 app--footer" fixed :dark="$vuetify.dark">
           <span class="caption">KD &copy; {{ new Date().getFullYear() }}</span>
@@ -67,15 +51,12 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import Appconfig from "@/api/app";
-//import alertError from '@/components/widgets/AlertError.vue'
-//import ThemeSettings from '@/components/ThemeSettings';
 import Loader from '@/components/Loader.vue'
 import RightMenu from '@/components/RightMenu.vue'
 @Component({
   components:{
-     //ThemeSettings,
      RightMenu,
-     'loader':Loader
+     Loader
   },
   props: {
     propMessage: String
@@ -89,7 +70,12 @@ import RightMenu from '@/components/RightMenu.vue'
         disconnect:function(){
           this.connected = false
           window.getApp.$emit('APP_DISCONNECTED');
+        },
+        connect_error:function(err){
+          this.connected=false
+           window.getApp.$emit('APP_CONNECT_ERROR',err);
         }
+
     },
   watch:{
     message(newval){
@@ -133,7 +119,11 @@ export default class Login extends Vue{
     this.$vuetify.goTo(0);
     this.rightDrawer = (!this.rightDrawer);
   }
-
+  nop(){
+    //do nothing to block enter key in form
+    // do not remove
+    alert('toto')
+  }
   mounted(){
     this.$store.dispatch('clearApplication')
     this.$socket.connect()

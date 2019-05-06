@@ -37,6 +37,7 @@ export interface IApplicationSocketConfiguration{
 export interface IApplicationServiceConfiguration{
     url:string
     api:IApi
+    timeout:number
 }
 
 export interface IApplicationDevelopperConfiguration{
@@ -97,6 +98,7 @@ const app:IApplicationConfiguration={
     service:{
         //url:'http://{host}:{port}/api/v1/',
         url:url.formatUnicorn( {port:process.env.SERVICE_PORT || '1337',host:process.env.SERVICE_LOCATION || location.hostname}).concat("/api/v1/"),
+        timeout: process.env.REQUEST_TIMEOUT || 3000,
         api:{
             login:{
                 verb:Verb.POST,
