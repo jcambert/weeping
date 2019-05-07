@@ -45,7 +45,7 @@ export interface ILoaders{
     joueurparties_:Array<any>=[]
     loading_:boolean=false
     error_=null
-    loaders_:ILoaders={clubinfo:false,joueurinfo:false,equipes:false,classementequipe:false,detailrencontre:false,joueurparties:false}
+    loaders_:ILoaders={clubinfo:false,joueurinfo:false,equipes:false,joueurs:false,classementequipe:false,detailrencontre:false,joueurparties:false}
     searchTermResponse_:any[]=[]
     message_={}
     categorieAge_= {
@@ -327,7 +327,10 @@ export interface ILoaders{
     @Mutation
     SET_JOUEURS(joueurs:[]){
         this.joueurs_.splice(0,this.joueurs_.length)
-        _.forEach(joueurs,joueur=>this.joueurs_.push(joueur))
+        _.forEach(joueurs,(joueur:any)=>{
+            joueur.point=parseInt(joueur.point)
+            this.joueurs_.push(joueur)
+        })
     }
     get joueurs(){
         return this.joueurs_

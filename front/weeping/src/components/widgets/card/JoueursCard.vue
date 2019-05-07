@@ -2,7 +2,7 @@
     <v-card>
 
         <v-list two-line class="pa-0">
-            <div v-for="(joueur,index) in joueurs" :key="index">
+            <div v-for="(joueur,index) in list " :key="index">
                 <v-list-tile href="#" >
                     
                     <v-list-tile-action>
@@ -32,6 +32,19 @@
 </template>
 
 <script>
+var orderby={
+    nom:{
+        text:"par nom",
+        fields:['nom','prenom'],
+        orders:['asc','asc']
+    },
+    points:{
+        text:"par points",
+        fields:['point'],
+        orders:['desc']
+    }
+}
+
 import Vue from 'vue'
 import Component from 'vue-class-component'
 @Component({
@@ -40,10 +53,34 @@ import Component from 'vue-class-component'
         type:Array,
         required:true
       }
+    },
+    filters:{
+        'find':function(value){
+            return this.list
+        }
     }
 })
 export default class JoueursCard extends Vue {
-    
+    index=0
+    toggle(){
+        this.index+=1
+        if(this.index>= _.keys(orderby).length)
+            this.index=0
+    }
+
+
+    get currentKey(){
+        var k=_.keys(orderby)[this.index]
+        return orderby[k]
+    }
+    get list(){
+        if(!this.joueurs)return []
+        return _.orderBy(this.joueurs,this.currentKey.fields,this.currentKey.orders)
+    } 
+
+    created() {
+        this.$parent.$on('more',this.toggle);
+    }
 }
 </script>
 

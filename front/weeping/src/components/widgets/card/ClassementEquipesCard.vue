@@ -75,10 +75,10 @@ export default {
             if(this.index>= _.keys(key).length)
                 this.index=0
         },
-    currentValue(clt){
-        var result=[]
-        _.forEach(this.currentKey.fields,f=>result.push(clt[f]))
-            return result.join(" ")
+        currentValue(clt){
+            var result=[]
+            _.forEach(this.currentKey.fields,f=>result.push(clt[f]))
+                return result.join(" ")
         }
     },
    

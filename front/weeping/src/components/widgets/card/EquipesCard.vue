@@ -3,7 +3,7 @@
 
         <v-list two-line class="pa-0">
             <div v-for="(equipe,index) in equipes" :key="index">
-                <v-list-tile href="#" >
+                <v-list-tile >
                     
                     <v-list-tile-action>
                         <v-icon color="primary">group</v-icon>

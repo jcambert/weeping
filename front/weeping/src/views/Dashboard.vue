@@ -17,14 +17,14 @@
                     </v-flex>
                     <v-flex lg4 sm12 xs12>
                         <base-card :title="club.nom"  v-if="club" >
-                            <club-card :club="club" ></club-card>
+                            <club-card :club="club" :load-joueurs="true" ></club-card>
                         </base-card>
                     </v-flex>   
-                     <v-flex lg4 sm12 xs12>
+                    <!--<v-flex lg4 sm12 xs12>
                         <base-card :title="`Joueurs`"   v-if="joueurs.length>0" >
                             <joueurs-card :joueurs="joueurs"></joueurs-card>
                         </base-card>
-                    </v-flex> 
+                    </v-flex> -->
                     <v-flex lg4 sm12 xs12>
                         <base-card :title="`Equipes Phase ${currentPhase}`"   v-if="equipes.length>0" >
                             <equipes-card :equipes="equipes" v-on:onshowresultat="wantShowResultat"></equipes-card>
@@ -85,7 +85,7 @@ import RightMenu from '@/components/RightMenu.vue'
             
         },
         club(newval){
-            this.$store.dispatch('getJoueurs',{numero:newval.numero})
+          //  this.$store.dispatch('getJoueurs',{numero:newval.numero})
             this.$store.dispatch('getEquipes',{numero:newval.numero})
         },
         equipes(newval){
@@ -159,9 +159,9 @@ export default class Dashboard extends Vue{
     get equipes(){
         return this.$store.getters.equipes
     }
-    get joueurs(){
+  /*  get joueurs(){
         return this.$store.getters.joueurs
-    }
+    }*/
     get equipesCurrentPhase(){
         return this.$store.getters.equipesCurrentPhase
     }

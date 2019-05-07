@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import './plugins/vuetify'
 import './plugins/axios'
-import App from './application/App'
+import App from './application/App.vue'
 import router from './router/'
 import store from "./store/"
 //import "./registerServiceWorker";

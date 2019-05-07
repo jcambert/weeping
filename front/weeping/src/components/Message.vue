@@ -50,7 +50,7 @@ export default class Message extends Vue{
   get message(){
     return this.$store.getters.message
   }
-};
+}
 </script>
 <style lang="stylus" scoped>
        
