@@ -1,5 +1,4 @@
 <template>
-
     <v-card>
         <div class="text-xs-center">
             <v-chip :color="getTileColor(info)" text-color="white" v-for="(info,key) in tileInfos" :key="key">
@@ -15,7 +14,7 @@
                 </v-list-tile-action>
                 <v-list-tile-content>
                     <v-list-tile-title >Défaites / Victoires </v-list-tile-title>
-                    <v-list-tile-sub-title>
+                    <v-list-tile-sub-title v-if="parties.length>0">
                          <v-chip color="red" text-color="white">
                             <v-avatar>
                                 <v-icon>trending_down</v-icon>
@@ -34,6 +33,9 @@
                             </v-avatar>
                             {{parseInt( ( victoires/(victoires+defaites))*100)}} %
                         </v-chip>
+                    </v-list-tile-sub-title>
+                    <v-list-tile-sub-title v-else>
+                        Aucune partie disputée
                     </v-list-tile-sub-title>
                 </v-list-tile-content>
             </v-list-tile>

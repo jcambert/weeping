@@ -86,6 +86,7 @@ module.exports= {
     joueur_liste_spid:opts=>{return request("joueur_liste_spid",opts)},
     joueur_detail_cla:opts=>{return request("joueur_detail_cla",opts)},
     joueur_detail_spid:opts=>{return request("joueur_detail_spid",opts)},
-    joueur_partie:opts=>{return request("joueur_partie",opts)},
+    joueur_partie_mysql:opts=>{return request("joueur_partie_mysql",opts)},
+    joueur_partie_spid:opts=>{return request("joueur_partie_spid",opts)},
     joueur_historique_cla:opts=>{return request("joueur_historique_cla",opts)},
 }

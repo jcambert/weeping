@@ -1,14 +1,14 @@
 module.exports = {
 
 
-  friendlyName: 'Joueur detail classement',
+  friendlyName: 'Joueur partie',
 
 
-  description: 'renvoie un joueur provenant de la base classement',
+  description: 'Renvoie une liste des parties d\'un joueur de la base SPID',
 
 
   inputs: {
-    licence:{
+    numlic:{
       description:"Numero de licence",
       type:'string',
       required:true
@@ -17,13 +17,17 @@ module.exports = {
 
 
   exits: {
-
+    badRequest: {
+        description: 'Invalid data',
+        //This one, as well as ´ok´ are always available
+        responseType: 'badRequest'
+    },
   },
 
 
   fn: async function (inputs, exits) {
 
-    weep.spid.joueur_detail_cla(inputs)
+    weep.spid.joueur_partie_spid(inputs)
     .then(resp=>{
       return exits.success(resp.data);
     })

@@ -82,6 +82,7 @@ export interface IAppThemeContent{
 export const url='http://{host}:{port}'
 export const isInDev = process.env.mode != 'production'
 export const isInProd = process.env.mode == 'production'
+console.log('isindev',isInDev)
 const app:IApplicationConfiguration={
     name:"WeePing",
     alt:"WeePing Application for Table Tennis players",
@@ -137,6 +138,11 @@ const app:IApplicationConfiguration={
                 verb:Verb.GET,
                 url:'joueur-parties/{licence}'
             },
+            joueurpartiesmysql:{
+                verb:Verb.GET,
+                url:'/spid/joueur-partie-mysql?',
+                useQuery:true
+            },
             joueurs:{
                 verb:Verb.GET,
                 url:'spid/joueur-liste-spid?',
@@ -146,6 +152,20 @@ const app:IApplicationConfiguration={
                 verb:Verb.GET,
                 url:'spid/club-liste?',
                 useQuery:true
+            },
+            joueurhistocla:{
+                verb:Verb.GET,
+                url:'/spid/joueur-historique-cla?',
+                useQuery:true
+            },
+            joueurDetail:{
+                verb:Verb.GET,
+                url:'/spid/joueur-detail-spid?',
+                useQuery:true
+            },
+            info:{
+                verb:Verb.GET,
+                url:'/spid/info'
             }
         }
     },

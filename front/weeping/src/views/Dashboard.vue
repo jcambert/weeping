@@ -4,9 +4,14 @@
             <v-container grid-list-xl fluid>
                 <loader :color="message.type" :message="message.message" :show="!connected" v-if="message.message && message.type=='error'"></loader>
                 <v-layout row wrap>
+                    <v-flex lg4 sm12 xs12>
+                        <base-card title="Liste des apis">
+                            <api-card ></api-card>
+                        </base-card>
+                    </v-flex>
                      <v-flex lg4 sm12 xs12>
                         <base-card :title="`${joueur.nom} ${joueur.prenom}`"  v-if="joueur">
-                            <template v-slot:toolbar>
+                            <template v-slot:toolbar v-if="joueurParties.length>0">
                                 <v-tooltip bottom>
                                     <v-btn dark icon @click="wantShowParties" slot="activator"><v-icon>supervised_user_circle</v-icon></v-btn>
                                     <span>Voir toutes les rencontres de {{joueur.prenom}}</span>
@@ -20,11 +25,7 @@
                             <club-card :club="club" :load-joueurs="true" ></club-card>
                         </base-card>
                     </v-flex>   
-                    <!--<v-flex lg4 sm12 xs12>
-                        <base-card :title="`Joueurs`"   v-if="joueurs.length>0" >
-                            <joueurs-card :joueurs="joueurs"></joueurs-card>
-                        </base-card>
-                    </v-flex> -->
+                    
                     <v-flex lg4 sm12 xs12>
                         <base-card :title="`Equipes Phase ${currentPhase}`"   v-if="equipes.length>0" >
                             <equipes-card :equipes="equipes" v-on:onshowresultat="wantShowResultat"></equipes-card>
@@ -34,6 +35,17 @@
                         <base-card :title="`Classement ${clt.division}`"   :moreable="true" >
                             <classement-equipes-card :classement="clt.classement" ></classement-equipes-card>
                         </base-card>
+                    </v-flex>
+                    
+
+                    <v-flex lg4 sm12 xs12>
+                        <chart-histo-cla v-if="joueur" :licence="joueur.licence"></chart-histo-cla>
+                    </v-flex>
+                    <v-flex lg4 sm12 xs12>
+                        <chart-tendance v-if="joueur"  ></chart-tendance>
+                    </v-flex>
+                    <v-flex lg4 sm12 xs12>
+                        <chart-resultat-mensuel v-if="joueur"  ></chart-resultat-mensuel>
                     </v-flex>
                 </v-layout>
                
@@ -47,6 +59,7 @@
 
 <script>
 import Vue from 'vue'
+import Material from 'vuetify/es5/util/colors';
 import Component from 'vue-class-component'
 import BaseCard from '@/components/widgets/card/BaseCard.vue'
 //import ProfileCard from '@/components/widgets/card/ProfileCard.vue'
@@ -61,6 +74,13 @@ import JoueurParties from '@/components/widgets/bottomsheet/JoueurParties.vue'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar';
 import Loader from '@/components/Loader.vue'
 import RightMenu from '@/components/RightMenu.vue'
+import ApiCard from '../components/widgets/card/ApiCard.vue';
+import Appconfig from "@/api/app";
+
+import ChartHistoCla from '../components/chart/ChartHistoCla.vue';
+import ChartTendance from '../components/chart/ChartTendance.vue';
+import ChartResultatMensuel from '../components/chart/ChartResultatMensuel.vue';
+
 @Component({
      components:{
         VuePerfectScrollbar,
@@ -75,7 +95,10 @@ import RightMenu from '@/components/RightMenu.vue'
         'detail-rencontre':DetailRencontre,
         'joueur-parties':JoueurParties,
         'loader':Loader,
-        
+        'api-card':ApiCard,
+        'chart-histo-cla':ChartHistoCla,
+        'chart-tendance':ChartTendance,
+        'chart-resultat-mensuel':ChartResultatMensuel
     },
     watch:{
         user(newval){
@@ -119,6 +142,7 @@ import RightMenu from '@/components/RightMenu.vue'
     },
 })
 export default class Dashboard extends Vue{
+    color= Material
     scrollSettings= {
         maxScrollbarLength: 160
     }
@@ -127,6 +151,7 @@ export default class Dashboard extends Vue{
     showParties=false
     connected = false
     mounted(){
+        this.$store.dispatch('setIsInDev',Appconfig.isInDev)
         if(this.user){
             this.$store.dispatch('getClubInfo',{numero:this.user.club})
             this.$store.dispatch('getJoueurInfo',{licence:this.user.licence})
@@ -189,112 +214,61 @@ export default class Dashboard extends Vue{
     get message(){
         return this.$store.getters.message
     }
-}
-/*
-export default {
-    components:{
-        VuePerfectScrollbar,
-        'base-card':BaseCard,
-        //'profile-card':ProfileCard,
-        'club-card':ClubCard,
-        'joueur-card':JoueurCard,
-        'equipes-card':EquipeCard,
-        'classement-equipes-card':ClassementEquipesCard,
-        'resultat-equipe':ResultatEquipe,
-        'detail-rencontre':DetailRencontre,
-        'joueur-parties':JoueurParties,
-        'loader':Loader
-    },
-    data: () => ({
-        scrollSettings: {
-            maxScrollbarLength: 160
-        },
-        showResultatSheet:false,
-        showDetailRencontre:false,
-        showParties:false
-    }),
-    methods:{
-        
-        wantShowResultat(id){
-            this.$store.dispatch('selectEquipe',id);
-            
-            this.showResultatSheet=true
-        },
-        wantShowDetailRencontre(rencontre){
-            this.$store.dispatch('getDetailRencontre',rencontre.lien)
-            this.showDetailRencontre=true
-        },
-        wantShowParties(){
-            this.showParties=true
-        },
-    },
-    computed:{
-        user(){
-            return this.$store.getters.user
-        },
-        club(){
-            return this.$store.getters.club
-        },
-        joueur(){
-            return this.$store.getters.joueur
-        },
-        equipes(){
-            return this.$store.getters.equipes
-        },
-        equipesCurrentPhase(){
-            return this.$store.getters.equipesCurrentPhase
-        },
-        classementequipes(){
-            return this.$store.getters.classementequipes 
-        },
-        resultatequipes(){
-            return this.$store.getters.resultatequipes
-        },
-        detailRencontre(){
-            return this.$store.getters.detailRencontre
-        },
-        currentPhase(){
-           return this.$store.getters.currentPhase
-        },
-        selectedEquipe(){
-            return this.$store.getters.selectedEquipe
-        },
-        selectedResultat(){
-            return this.$store.getters.selectedResultat
-        },
-        joueurParties(){
-            return this.$store.getters.joueurParties
-        }
-    },
-    watch:{
-        user(newval){
-            this.$store.dispatch('getClubInfo',{numero:newval.club})
-            this.$store.dispatch('getJoueurInfo',{licence:newval.licence})
-            this.$store.dispatch('getJoueurParties',{licence:newval.licence})
-            
-        },
-        club(newval){
-            this.$store.dispatch('getEquipes',{numero:newval.numero})
-        },
-        equipes(newval){
-            _.forEach(newval,equipe=>{
-                this.$store.dispatch('getClassementEquipe',{ equipe:equipe})
-                this.$store.dispatch('getResultatEquipe',{ equipe:equipe})
-            })
-            
-        },
-        joueurParties(newval){
-            
-        }
-    },
-    mounted(){
-        if(this.user){
-            this.$store.dispatch('getClubInfo',{numero:this.user.club})
-            this.$store.dispatch('getJoueurInfo',{licence:this.user.licence})
-            this.$store.dispatch('getJoueurParties',{licence:this.user.licence})
+
+    get historyData(){
+        return [{
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: 'line'
+        }]
+    }
+
+    get historyOption(){
+        return {
+            title: {
+                text: 'ECharts entry example'
+            },
+            tooltip: {},
+            legend: {
+                data:['Sales']
+            },
+            xAxis: {
+                data: ["shirt","cardign","chiffon shirt","pants","heels","socks"]
+            },
+            yAxis: {},
+            series: [{
+                name: 'Sales',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
         }
     }
-}*/
+
+    get locationData() {
+        return [
+                {
+                    value: 50,
+                    name: 'China'
+                },
+                {
+                    value: 35,
+                    name: 'USA'
+                },
+                {
+                    value: 25,
+                    name: 'EU'
+                },
+                {
+                    value: 10,
+                    name: 'Russia'
+                },
+                {
+                    value: 10,
+                    name: 'Other'
+                }
+                ];
+    }
+}
+
 </script>
 
 

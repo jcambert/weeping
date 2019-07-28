@@ -30,6 +30,11 @@ const store = new Store<IRootState>({/*plugins:[vuexLocal.plugin]*/});
 export interface ILoaders{
     [key: string]: boolean;
 }
+
+export interface IHistorique {
+    histo?:Array<any>
+    detail?:{}
+}
 @Module({ dynamic: true, store:store,name:'app'})
  class ApplicationStore extends VuexModule /*implements IAppState*/{
      
@@ -43,11 +48,16 @@ export interface ILoaders{
     resultat_:Array<any>=[]
     detailRencontre_:{}|undefined=undefined
     joueurparties_:Array<any>=[]
+    joueur_parties_mysql_:Array<any>=[]
+    apis_:Array<any>=[]
     loading_:boolean=false
     error_=null
-    loaders_:ILoaders={clubinfo:false,joueurinfo:false,equipes:false,joueurs:false,classementequipe:false,detailrencontre:false,joueurparties:false}
+    loaders_:ILoaders={clubinfo:false,joueurinfo:false,equipes:false,joueurs:false,classementequipe:false,detailrencontre:false,joueurparties:false,joueurhistocla:false,joueurpartiesmysql:false}
     searchTermResponse_:any[]=[]
     message_={}
+    isInDev_=false
+    api_result_={}
+    histo_cla_:IHistorique={}
     categorieAge_= {
         'N': { value: 'Non determiné' },
         'P': { value: 'Poussin', desc: 'jeunes ayant 8 ans au plus' },
@@ -457,6 +467,8 @@ export interface ILoaders{
     @Mutation
     SET_JOUEUR_PARTIES(payload:any){
         this.joueurparties_.splice(0,this.joueurparties_.length)
+        if(_.isUndefined(payload))
+            payload=[]
         _.forEach(payload,
             partie=>{
                 
@@ -478,6 +490,7 @@ export interface ILoaders{
         
         window.spid.joueurParties(payload.licence)
             .then((resp:any)=>{
+                //console.log(resp.resultat)
                 this.context.commit('SET_JOUEUR_PARTIES',resp.resultat)
                 this.context.commit('SET_LOADING',false)
                 this.context.commit('SET_LOADER',{joueurparties:false})
@@ -530,6 +543,215 @@ export interface ILoaders{
     @Action({commit:'SET_MESSAGE'})
     setMessage(payload:any){    
         return payload
+    }
+
+    @Mutation
+    SET_APIS(payload:any){
+        this.apis_=payload
+    }
+
+    public get apis(){
+        return this.apis_
+    }
+
+    @Action({commit:'SET_APIS'})
+    getApisInfo(){
+        this.context.commit('SET_LOADING',true)
+        
+        window.spid.apis()
+            .then((resp:any)=>{
+                //console.log(resp.resultat)
+                this.context.commit('SET_APIS',resp)
+                
+            })
+            .catch(error=>{
+                this.context.commit('SET_LOADING',false)
+            })
+    }
+
+    @Mutation
+    SET_ISINDEV(payload:boolean){
+        this.isInDev_=payload
+    }
+    get isInDev():boolean{
+        return this.isInDev_
+    }
+    @Action({commit:'SET_ISINDEV'})
+    setIsInDev(payload:boolean){
+        
+        return payload ||false
+    }
+
+    @Mutation
+    SET_API_RESULT(payload:any){
+        this.api_result_=payload
+    }
+
+    get apiResult(){
+        return this.api_result_
+    }
+    @Action({})
+    executeApi(payload:any){
+        this.context.commit('SET_LOADING',true)
+        this.context.commit('SET_API_RESULT',{})
+        window.spid.execute(payload.apiname,payload.param).then((resp:any)=>{
+            //console.log(resp)
+            this.context.commit('SET_API_RESULT',resp)
+            
+        })
+        .catch(error=>{
+            console.log(error)
+            this.context.commit('SET_LOADING',false)
+        })
+    }
+    @Action({commit:'SET_API_RESULT'})
+    clearApiResult(){
+        return {}
+    }
+
+    @Mutation
+    SET_HISTO_CLA(payload:any){
+        //console.log(payload)
+        this.histo_cla_=payload
+    }
+
+
+    get joueurHistoriqueClassement(){
+        return this.histo_cla_
+    }
+
+    @Action({})
+    getJoueurHistoriqueClassement(payload:any){
+        this.context.commit('SET_LOADING',true)
+        this.context.commit('SET_LOADER',{joueurhistocla:true})
+        this.context.commit('SET_HISTO_CLA',{})
+        window.spid.joueurHistoriqueClassement(payload)
+            .then((resp:any)=>{
+               
+                window.spid.joueurDetail(payload).then((r:any)=>{
+                    resp.detail=r
+                    this.context.commit('SET_HISTO_CLA',resp)
+                    this.context.commit('SET_LOADER',{joueurhistocla:false})
+                    this.context.commit('SET_LOADING',false)
+                })
+                .catch(error=>{
+                    console.log(error)
+                    this.context.commit('SET_LOADING',false)                    
+                    this.context.commit('SET_LOADER',{joueurhistocla:true})
+                })
+
+            })
+            .catch(error=>{
+                console.log(error)
+                this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_LOADER',{joueurhistocla:true})
+            })
+    }
+
+    @Mutation 
+    SET_JOUEUR_PARTIES_MYSQL(payload:any){
+        this.joueur_parties_mysql_.splice(0,this.joueur_parties_mysql_.length)
+        _.forEach(payload,partie=>{
+            partie.pointres=parseInt(partie.pointres)
+            partie.coefchamp=parseFloat( partie.coefchamp)
+            partie.advclaof=parseInt(partie.advclaof)
+            partie.moisannee=parseInt(partie.date.substring(6,8).concat(partie.date.substring(3,5)))
+            partie.mois=parseInt(partie.date.substring(3,5))
+            this.joueur_parties_mysql_.push(partie)
+            //console.log(partie)
+        })
+        //this.joueur_parties_mysql_=payload
+    }
+
+    get joueurPartiesMysql(){
+        return this.joueur_parties_mysql_
+    }
+    @Action({})
+    getJoueurPartiesMysql(payload:any){
+        this.context.commit('SET_JOUEUR_PARTIES_MYSQL',[])
+        this.context.commit('SET_LOADING',true)
+        this.context.commit('SET_LOADER',{joueurpartiesmysql:true})
+        window.spid.joueurPartiesMysql(payload)
+            .then((resp:any)=>{
+                this.context.commit('SET_JOUEUR_PARTIES_MYSQL',resp.partie)
+                
+                this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_LOADER',{joueurpartiesmysql:false})
+
+            })
+            .catch(error=>{
+                console.log(error)
+                this.context.commit('SET_LOADING',false)
+                this.context.commit('SET_LOADER',{joueurpartiesmysql:false})
+            })
+    }
+    get partiesPointsVD(){
+        var res:Array<{}>=[]
+        res.push({name:'Points Vict A.',value:Math.abs( _.reduce(_.map(this.partiesVictoiresAnormales,'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Vict N.',value:Math.abs(_.reduce(_.map(this.partiesVictoiresNormales,'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Def N.',value:Math.abs(_.reduce(_.map(this.partiesDefaiteNormales,'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Def A.',value:Math.abs(_.reduce(_.map(this.partiesDefaitesAnormales,'pointres'),(a,b)=>a+b,0))})
+
+        return res
+    } 
+
+    get partiesNombreVD(){
+        var res:Array<{}>=[]
+        res.push({name:'Victoire A.',value:this.partiesVictoiresAnormales.length})
+        res.push({name:'Victoire N.',value:this.partiesVictoiresNormales.length})
+        res.push({name:'Defaite N.',value:this.partiesDefaiteNormales.length})
+        res.push({name:'Defaite A.',value:this.partiesDefaitesAnormales.length})
+        return res
+    } 
+
+    get PartieMensuelNombreVD(){
+        var res:Array<{}>=[]
+        if(this.joueur_parties_mysql_.length==0)return {min:0,max:0,res:{}}
+        var fn=function(ar){
+            var aa=_.groupBy( ar,p=>p.moisannee)
+            _.forEach(aa,(a:any,index)=>{
+                //console.log(a.length)
+                aa[index]=a.length
+            })
+            return aa
+        }
+
+
+
+        var min= _.minBy(this.joueur_parties_mysql_,p=>p.moisannee)['moisannee']
+        var max= _.maxBy(this.joueur_parties_mysql_,p=>p.moisannee)['moisannee']
+        return {min:min,max:max,
+            'Victoire A.': fn(this.partiesVictoiresAnormales),
+            'Victoire N.':fn(this.partiesVictoiresNormales),
+            'Defaite N.':fn( this.partiesDefaiteNormales),
+            'Defaite A.':fn(this.partiesDefaitesAnormales)
+        }
+    }
+    get partiesVictoiresNormales(){
+        var res=_.filter(this.joueurPartiesMysql,partie=>partie.advclaof<=this.classement && partie.vd=="V")
+        return res
+    }
+
+    get partiesVictoiresAnormales(){
+        var res=_.filter(this.joueurPartiesMysql,partie=>partie.advclaof>this.classement && partie.vd=="V")
+        return res
+    }
+    get partiesDefaiteNormales(){
+        var res=_.filter(this.joueurPartiesMysql,partie=>partie.advclaof>=this.classement && partie.vd=="D")
+        return res
+    }
+
+    get partiesDefaitesAnormales(){
+        var res=_.filter(this.joueurPartiesMysql,partie=>partie.advclaof<this.classement && partie.vd=="D")
+        return res
+    }
+
+    get classement(){
+        if(this.joueur){
+            var c=parseInt(this.joueur.point)
+            return Math.trunc(c/100)
+        }
+        return  0
     }
 }
 

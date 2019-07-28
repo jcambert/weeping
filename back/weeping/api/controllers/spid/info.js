@@ -30,8 +30,9 @@ module.exports = {
     if(!inputs.api){
       _.forEach(  _.filter(sails.getActions(),(a,n)=>{return n.startsWith("spid/")}) , (info,name)=>{
         if(info.toJSON){
-          sails.log.debug(info);
+          //sails.log.debug(info);
           action=info.toJSON();
+          sails.log.debug(action)
           result.push({type:info. _middlewareType.replace('ACTION: spid/',''),friendlyName:action.friendlyName,description:action.description,inputs:action.inputs});
         }
       });

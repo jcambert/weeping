@@ -22,9 +22,14 @@ export interface ISpidService{
     resultatEquipe(lien: string): Promise<{}>
     detailRencontre(lien:string):Promise<{}>
     joueurParties(licence:string):Promise<{}>
+    joueurPartiesMysql(payload:any): Promise<{}> 
     searchTerm(searchTerm:string):Promise<{}>
     joueurs(payload:IJoueursListe):Promise<{}>
+    joueurHistoriqueClassement(payload:any):Promise<{}>
+    joueurDetail(payload:any):Promise<{}>
     clubs(payload:any):Promise<{}>
+    apis():Promise<{}>
+    execute(apiname:string,data:object):Promise<{}>
 }
 /*interface IRequestOption{
     baseURL:string
@@ -68,7 +73,7 @@ class SpidService implements ISpidService{
         //console.log(opts)
         return opts
     }
-    public login(licence:string,prenom:string|""){
+    public login(licence:string,prenom:string|""): Promise<{}>{
         //console.log(this);
         var data:{}
         if(_.isFinite(parseInt(licence)))
@@ -98,7 +103,7 @@ class SpidService implements ISpidService{
 
     }
 
-    retrieveInfo(joueur:any){
+    retrieveInfo(joueur:any): Promise<{}>{
         var opts={
             baseURL: app.service.url,
             url:app.service.api.retrieveLicencieInfo.url.formatUnicorn(joueur),
@@ -117,7 +122,7 @@ class SpidService implements ISpidService{
         })
     }
 
-    public async clubInfo(numero:string){
+    public async clubInfo(numero:string): Promise<{}>{
         var opts={
             baseURL: app.service.url,
             url:app.service.api.clubinfo.url.formatUnicorn({club:numero}),
@@ -261,6 +266,21 @@ class SpidService implements ISpidService{
             })
         })
     }
+    public async joueurPartiesMysql(payload:any): Promise<{}> {
+        var opts=this.buildReq('joueurpartiesmysql',payload)
+       
+        let req= axios(opts)
+        return new Promise((resolve,reject)=>{
+            req
+            .then((resp:any)=>{
+               // console.log(resp)
+                resolve(resp.data.liste)
+            })
+            .catch(error=>{
+                reject(error)
+            })
+        })
+    }
 
     public calculPoints(joueurs:any,partie:any):{}{
         return calculPoints(joueurs,partie)
@@ -289,6 +309,37 @@ class SpidService implements ISpidService{
 
     public async clubs(payload:any):Promise<{}>{
         var opts=this.buildReq('clubs',payload)
+        var req= axios(opts)
+        return new Promise((resolve,reject)=>{
+            req
+            .then((resp:any)=>{
+               // console.log(resp)
+                resolve(resp.data.liste)
+            })
+            .catch(error=>{
+                reject(error)
+            })
+        })
+    }
+
+    public async joueurHistoriqueClassement(payload:any):Promise<{}>{
+        var opts=this.buildReq('joueurhistocla',payload)
+        var req= axios(opts)
+        return new Promise((resolve,reject)=>{
+            req
+            .then((resp:any)=>{
+               // console.log(resp)
+                resolve(resp.data.liste)
+            })
+            .catch(error=>{
+                reject(error)
+            })
+        })
+    }
+
+    public async joueurDetail(payload:any):Promise<{}>{
+        
+        var opts=this.buildReq('joueurDetail',payload)
         var req= axios(opts)
         return new Promise((resolve,reject)=>{
             req
@@ -336,6 +387,48 @@ class SpidService implements ISpidService{
         })
         
     }
+    public async apis():Promise<{}>{
+        var opts=this.buildReq('info',{})
+        var req= axios(opts)
+        return new Promise((resolve,reject)=>{
+            req
+            .then((resp:any)=>{
+               // console.log(resp)
+                resolve(resp.data)
+            })
+            .catch(error=>{
+                reject(error)
+            })
+        })
+    }
+
+    public async execute(apiname:string,data:object): Promise<{}>{
+        var api='spid/'.concat(apiname,'?')
+        var opts:AxiosRequestConfig={
+            baseURL: app.service.url,
+            url:api.concat(qs.stringify(data) ),
+            method:Verb.GET,
+            timeout:app.service.timeout
+        }
+        
+
+        let req= axios(opts )
+
+        return new Promise((resolve,reject)=>{
+            req
+            .then(resp=>{
+                resolve(JSON.parse( JSON.stringify( resp)))
+               
+            })
+           
+            .catch(error=>{
+                reject(error)
+            })
+        }).then(this.retrieveInfo)
+
+    }
+
+    
 }
 
 export const spidService = new SpidService()

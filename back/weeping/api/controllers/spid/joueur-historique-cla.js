@@ -1,7 +1,7 @@
 module.exports = {
 
 
-  friendlyName: 'Joueur historique cla',
+  friendlyName: 'Joueur historique classement',
 
 
   description: 'Renvoie l\'historique classement d\'un joueur',

@@ -24,6 +24,7 @@
     "sails.io.js-dist": "^1.0.0",
     "socket.io-client": "^2.2.0",
     "vue": "^2.6.6",
+    "vue-json-viewer": "^2.2.1",
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.1",

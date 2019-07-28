@@ -50,9 +50,10 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import Appconfig from "@/api/app";
+import Appconfig,{isInDev} from "@/api/app";
 import Loader from '@/components/Loader.vue'
 import RightMenu from '@/components/RightMenu.vue'
+
 @Component({
   components:{
      RightMenu,
@@ -122,12 +123,19 @@ export default class Login extends Vue{
   nop(){
     //do nothing to block enter key in form
     // do not remove
-    alert('toto')
+    //alert('toto')
   }
   mounted(){
+    console.log(isInDev)
+    this.$store.dispatch('setIsInDev',isInDev)
     this.$store.dispatch('clearApplication')
     this.$socket.connect()
-  }
+
+    if(isInDev)
+      this.licence="905821"
+      //REMOVE IN PRODUCTION
+      this.login()
+    }
   get formValid() {
       return this.valid && this.connected;
   }
@@ -139,6 +147,10 @@ export default class Login extends Vue{
   }
   get message(){
     return this.$store.getters.message
+  }
+
+  get isInDev(){
+    return this.$store.getters.isInDev || false
   }
 
 }
