@@ -13,29 +13,56 @@
                     ['xAxis.data',datas.xaxisdata],
                     ['yAxis.type','value'],
                     ['legend.data',['Victoire A.','Victoire N.','Defaite N.','Defaite A.',]],
+                    ['tooltip',{
+                        tooltip : {
+                            trigger: 'axis',
+                            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
+                    }],
                     ['series',[
                         {
                             name:'Victoire A.',
                             type:'bar',
                             stack:'a',
+                            color:'#0F0',
+                            label: {
+                                show: true,
+                                color:'#000'
+                            },
                             data: datas.sets['Victoire A.']
                         },
                         {
                             name:'Victoire N.',
                             type:'bar',
                             stack: 'a',
+                            color:'#080',
+                            label: {
+                                    show: true,
+                            },
                             data:datas.sets['Victoire N.']
                         },
                         {
                             name:'Defaite N.',
                             type:'bar',
                             stack: 'a',
+                            color:'#800',
+                            label: {
+                                show: true,
+                            },
                             data:datas.sets['Defaite N.']
                         },
                         {
                             name:'Defaite A.',
                             type:'bar',
                             stack: 'a',
+                            color:'#f00',
+                            label: {
+                                    show: true,
+                                    
+                                
+                            },
                             data:datas.sets['Defaite A.']
                         },              
                     ]]

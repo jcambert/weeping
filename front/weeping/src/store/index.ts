@@ -22,8 +22,16 @@ const vuexLocal = new VuexPersistence({
     modules:['app']
   })
 
+interface ObjectLiteral {
+    [key: string]: Array<any>;
+  }
+interface IPartieMensuelNombreVD{
+    [key: string]: any;
+}
 
-
+interface IClassement{
+    [key: string]: Number;
+}
 const store = new Store<IRootState>({/*plugins:[vuexLocal.plugin]*/});
 
 
@@ -48,7 +56,15 @@ export interface IHistorique {
     resultat_:Array<any>=[]
     detailRencontre_:{}|undefined=undefined
     joueurparties_:Array<any>=[]
-    joueur_parties_mysql_:Array<any>=[]
+    joueur_parties_mysql_:ObjectLiteral={}
+    partiesDefaitesAnormales_:ObjectLiteral={}
+    partiesDefaiteNormales_:ObjectLiteral={}
+    partiesVictoiresAnormales_:ObjectLiteral={}
+    partiesVictoiresNormales_:ObjectLiteral={}
+    partieMensuelNombreVD_:IPartieMensuelNombreVD={}
+    partiesNombreVD_:ObjectLiteral={}
+    partiesPointsVD_:ObjectLiteral={}
+    joueursClassement_:IClassement={}
     apis_:Array<any>=[]
     loading_:boolean=false
     error_=null
@@ -650,17 +666,25 @@ export interface IHistorique {
 
     @Mutation 
     SET_JOUEUR_PARTIES_MYSQL(payload:any){
-        this.joueur_parties_mysql_.splice(0,this.joueur_parties_mysql_.length)
-        _.forEach(payload,partie=>{
+        //this.joueur_parties_mysql_.splice(0,this.joueur_parties_mysql_.length)
+        _.forEach(payload.parties,partie=>{
             partie.pointres=parseInt(partie.pointres)
             partie.coefchamp=parseFloat( partie.coefchamp)
             partie.advclaof=parseInt(partie.advclaof)
             partie.moisannee=parseInt(partie.date.substring(6,8).concat(partie.date.substring(3,5)))
             partie.mois=parseInt(partie.date.substring(3,5))
-            this.joueur_parties_mysql_.push(partie)
+            
             //console.log(partie)
         })
+        this.joueur_parties_mysql_[ payload.licence]=payload.parties
         //this.joueur_parties_mysql_=payload
+        this.calculatePartiesDefaitesAnormales(payload.licence)
+        this.calculatePartiesDefaiteNormales(payload.licence)
+        this.calculatePartiesVictoiresAnormales(payload.licence)
+        this.calculatePartiesVictoiresNormales(payload.licence)
+        this.calculatePartieMensuelNombreVD(payload.licence)
+        this.calculatePartiesNombreVD(payload.licence)
+        this.calculatePartiesPointsVD(payload.licence)
     }
 
     get joueurPartiesMysql(){
@@ -668,12 +692,18 @@ export interface IHistorique {
     }
     @Action({})
     getJoueurPartiesMysql(payload:any){
-        this.context.commit('SET_JOUEUR_PARTIES_MYSQL',[])
+        if(!payload.licence && this.joueur){
+            payload.licence=this.joueur.licence
+        }
+
+        this.context.commit('SET_JOUEUR_PARTIES_MYSQL',{licence:payload.licence,parties:[]})
         this.context.commit('SET_LOADING',true)
         this.context.commit('SET_LOADER',{joueurpartiesmysql:true})
+        
         window.spid.joueurPartiesMysql(payload)
             .then((resp:any)=>{
-                this.context.commit('SET_JOUEUR_PARTIES_MYSQL',resp.partie)
+                resp.licence=payload.licence
+                this.context.commit('SET_JOUEUR_PARTIES_MYSQL',{parties:resp.partie,licence:resp.licence})
                 
                 this.context.commit('SET_LOADING',false)
                 this.context.commit('SET_LOADER',{joueurpartiesmysql:false})
@@ -685,28 +715,36 @@ export interface IHistorique {
                 this.context.commit('SET_LOADER',{joueurpartiesmysql:false})
             })
     }
+
+    calculatePartiesPointsVD(licence:string){
+        var res:Array<{}>=[]
+        res.push({name:'Points Vict A.',value:Math.abs( _.reduce(_.map(this.partiesVictoiresAnormales_[licence],'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Vict N.',value:Math.abs(_.reduce(_.map(this.partiesVictoiresNormales_[licence],'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Def N.',value:Math.abs(_.reduce(_.map(this.partiesDefaiteNormales_[licence],'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Def A.',value:Math.abs(_.reduce(_.map(this.partiesDefaitesAnormales_[licence],'pointres'),(a,b)=>a+b,0))})
+        this.partiesPointsVD_[licence]=res
+        return res
+    }
     get partiesPointsVD(){
-        var res:Array<{}>=[]
-        res.push({name:'Points Vict A.',value:Math.abs( _.reduce(_.map(this.partiesVictoiresAnormales,'pointres'),(a,b)=>a+b,0))})
-        res.push({name:'Points Vict N.',value:Math.abs(_.reduce(_.map(this.partiesVictoiresNormales,'pointres'),(a,b)=>a+b,0))})
-        res.push({name:'Points Def N.',value:Math.abs(_.reduce(_.map(this.partiesDefaiteNormales,'pointres'),(a,b)=>a+b,0))})
-        res.push({name:'Points Def A.',value:Math.abs(_.reduce(_.map(this.partiesDefaitesAnormales,'pointres'),(a,b)=>a+b,0))})
-
-        return res
+       return this.partiesPointsVD_
     } 
-
+    
+    calculatePartiesNombreVD(licence:string){
+        var res:Array<{}>=[]
+        res.push({name:'Victoire A.',value:this.partiesVictoiresAnormales_[licence].length})
+        res.push({name:'Victoire N.',value:this.partiesVictoiresNormales_[licence].length})
+        res.push({name:'Defaite N.',value:this.partiesDefaiteNormales_[licence].length})
+        res.push({name:'Defaite A.',value:this.partiesDefaitesAnormales_[licence].length})
+        this.partiesNombreVD_[licence]=res
+        return res
+    }
     get partiesNombreVD(){
-        var res:Array<{}>=[]
-        res.push({name:'Victoire A.',value:this.partiesVictoiresAnormales.length})
-        res.push({name:'Victoire N.',value:this.partiesVictoiresNormales.length})
-        res.push({name:'Defaite N.',value:this.partiesDefaiteNormales.length})
-        res.push({name:'Defaite A.',value:this.partiesDefaitesAnormales.length})
-        return res
+        return this.partiesNombreVD_
     } 
-
-    get PartieMensuelNombreVD(){
+    
+    calculatePartieMensuelNombreVD(licence:string){
         var res:Array<{}>=[]
-        if(this.joueur_parties_mysql_.length==0)return {min:0,max:0,res:{}}
+        if(this.joueur_parties_mysql_[licence].length==0)return {min:0,max:0,res:{}}
         var fn=function(ar){
             var aa=_.groupBy( ar,p=>p.moisannee)
             _.forEach(aa,(a:any,index)=>{
@@ -717,35 +755,59 @@ export interface IHistorique {
         }
 
 
+        
+        var min= _.minBy(this.joueur_parties_mysql_[licence],p=>p.moisannee)['moisannee']
+        var max= _.maxBy(this.joueur_parties_mysql_[licence],p=>p.moisannee)['moisannee']
 
-        var min= _.minBy(this.joueur_parties_mysql_,p=>p.moisannee)['moisannee']
-        var max= _.maxBy(this.joueur_parties_mysql_,p=>p.moisannee)['moisannee']
-        return {min:min,max:max,
+        var ret= {min:min,max:max,
             'Victoire A.': fn(this.partiesVictoiresAnormales),
             'Victoire N.':fn(this.partiesVictoiresNormales),
             'Defaite N.':fn( this.partiesDefaiteNormales),
             'Defaite A.':fn(this.partiesDefaitesAnormales)
         }
+        this.partieMensuelNombreVD_[licence]=ret
+        return ret
     }
-    get partiesVictoiresNormales(){
-        var res=_.filter(this.joueurPartiesMysql,partie=>partie.advclaof<=this.classement && partie.vd=="V")
-        return res
+    get PartieMensuelNombreVD(){
+        return this.partieMensuelNombreVD_
     }
 
+    calculatePartiesVictoiresNormales(licence:string){
+        var res=_.filter(this.joueurPartiesMysql[licence],partie=>partie.advclaof<=this.classement && partie.vd=="V")
+        this.partiesVictoiresNormales_[licence]=res
+        return res
+    }
+    get partiesVictoiresNormales(){
+        return this.partiesVictoiresNormales_
+    }
+
+    calculatePartiesVictoiresAnormales(licence:string){
+        var res=_.filter(this.joueurPartiesMysql[licence],partie=>partie.advclaof>this.classement && partie.vd=="V")
+        this.partiesVictoiresAnormales_[licence]=res
+        return res
+    }
     get partiesVictoiresAnormales(){
-        var res=_.filter(this.joueurPartiesMysql,partie=>partie.advclaof>this.classement && partie.vd=="V")
+        return this.partiesVictoiresAnormales_
+    }
+    
+    calculatePartiesDefaiteNormales(licence:string){
+        var res=_.filter(this.joueurPartiesMysql[licence],partie=>partie.advclaof>=this.classement && partie.vd=="D")
+        this.partiesDefaiteNormales_[licence]=res
         return res
     }
     get partiesDefaiteNormales(){
-        var res=_.filter(this.joueurPartiesMysql,partie=>partie.advclaof>=this.classement && partie.vd=="D")
+        return this.partiesDefaiteNormales_
+    }
+    calculatePartiesDefaitesAnormales(licence:string){
+        var res=_.filter(this.joueurPartiesMysql[licence],partie=>partie.advclaof<this.classement && partie.vd=="D")
+        this.partiesDefaitesAnormales_[licence]=res
         return res
     }
-
     get partiesDefaitesAnormales(){
-        var res=_.filter(this.joueurPartiesMysql,partie=>partie.advclaof<this.classement && partie.vd=="D")
-        return res
+        return this.partiesDefaitesAnormales_
     }
 
+    
     get classement(){
         if(this.joueur){
             var c=parseInt(this.joueur.point)
@@ -754,6 +816,10 @@ export interface IHistorique {
         return  0
     }
 }
-
+class Joueur{
+    constructor(){
+        
+    }
+}
 
  export default store;

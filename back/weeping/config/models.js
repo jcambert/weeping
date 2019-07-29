@@ -72,7 +72,7 @@ module.exports.models = {
     createdAt: { type: 'number', autoCreatedAt: true, },
     updatedAt: { type: 'number', autoUpdatedAt: true, },
     //id: { type: 'number', autoIncrement: true, },
-    id: { type: 'string', columnName: 'id' },
+    id: { type: 'string', columnName: 'id' },//ADD THIS LINE WHEN USING FIREBASE
     //--------------------------------------------------------------------------
     //  /\   Using MongoDB?
     //  ||   Replace `id` above with this instead:
@@ -122,6 +122,5 @@ module.exports.models = {
   cascadeOnDestroy: true,
 
   datastore:"weeping"
-
 
 };

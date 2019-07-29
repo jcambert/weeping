@@ -59,5 +59,6 @@ module.exports.datastores = {
     //set firebase credential in firebase.json file
     adapter:'firebase',
     url: 'https://weeping-201a8.firebaseio.com'
+   
   }
 };

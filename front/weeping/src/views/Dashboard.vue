@@ -108,7 +108,6 @@ import ChartResultatMensuel from '../components/chart/ChartResultatMensuel.vue';
             
         },
         club(newval){
-          //  this.$store.dispatch('getJoueurs',{numero:newval.numero})
             this.$store.dispatch('getEquipes',{numero:newval.numero})
         },
         equipes(newval){
@@ -184,9 +183,6 @@ export default class Dashboard extends Vue{
     get equipes(){
         return this.$store.getters.equipes
     }
-  /*  get joueurs(){
-        return this.$store.getters.joueurs
-    }*/
     get equipesCurrentPhase(){
         return this.$store.getters.equipesCurrentPhase
     }
@@ -215,58 +211,7 @@ export default class Dashboard extends Vue{
         return this.$store.getters.message
     }
 
-    get historyData(){
-        return [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line'
-        }]
-    }
-
-    get historyOption(){
-        return {
-            title: {
-                text: 'ECharts entry example'
-            },
-            tooltip: {},
-            legend: {
-                data:['Sales']
-            },
-            xAxis: {
-                data: ["shirt","cardign","chiffon shirt","pants","heels","socks"]
-            },
-            yAxis: {},
-            series: [{
-                name: 'Sales',
-                type: 'bar',
-                data: [5, 20, 36, 10, 10, 20]
-            }]
-        }
-    }
-
-    get locationData() {
-        return [
-                {
-                    value: 50,
-                    name: 'China'
-                },
-                {
-                    value: 35,
-                    name: 'USA'
-                },
-                {
-                    value: 25,
-                    name: 'EU'
-                },
-                {
-                    value: 10,
-                    name: 'Russia'
-                },
-                {
-                    value: 10,
-                    name: 'Other'
-                }
-                ];
-    }
+    
 }
 
 </script>

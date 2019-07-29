@@ -46,8 +46,7 @@
 ################################################
 
 config/local.js
-config/firebase.json
-
+config/spidauth.js
 ################################################
 # Dependencies
 #

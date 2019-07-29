@@ -65,7 +65,11 @@ import echart from '@/components/chart/echart';
         'e-chart':echart
     },
     props:{
-        
+        licence:{
+            type:String,
+            required:false,
+            default:''
+        }
     },
     watch:{
         licence:function(newv){
@@ -78,8 +82,12 @@ export default class ChartTendance extends Vue{
     get classement(){
         return this.$store.getters.classement
     }
+
+    get joueur(){
+        return this.$store.getters.joueur
+    }
     get parties(){
-        return this.$store.getters.joueurPartiesMysql
+        return this.$store.getters.joueurPartiesMysql[this.licence.length>0?this.licence:this.joueur.licence]
     }
     get refreshing(){
         return this.$store.getters.loaders.joueurpartiesmysql
@@ -102,11 +110,14 @@ export default class ChartTendance extends Vue{
 
 
     refresh(){
-        if(this.licence)
-            this.$store.dispatch('getJoueurPartiesMysql',{licence:this.licence})
+        var opt={}
+        if(this.licence.length>0)
+            opt.licence=this.licence
+        this.$store.dispatch('getJoueurPartiesMysql',opt)
     }
     mounted(){
-        this.refresh()
+        if(this.parties.length==0)
+            this.refresh()
     }
 }
 </script>

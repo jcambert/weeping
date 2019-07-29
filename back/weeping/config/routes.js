@@ -82,7 +82,7 @@ module.exports.routes = {
   'GET /api/v1/equipes/:type/:numclu':{ action: 'spid/equipe-liste' },
   'GET /api/v1/resultat-equipe/:cx_poule/:d/:action?':{ action: 'spid/resultat-equipe' },
   'GET /api/v1/detail-rencontre/':{ action: 'spid/rencontre' },
-  'GET /api/v1/joueur-parties/:numlic':{ action: 'spid/joueur-partie' },
+  'GET /api/v1/joueur-parties/:numlic':{ action: 'spid/joueur-partie-mysql' },
   //  ╔╦╗╦╔═╗╔═╗  ╦═╗╔═╗╔╦╗╦╦═╗╔═╗╔═╗╔╦╗╔═╗
   //  ║║║║╚═╗║    ╠╦╝║╣  ║║║╠╦╝║╣ ║   ║ ╚═╗
   //  ╩ ╩╩╚═╝╚═╝  ╩╚═╚═╝═╩╝╩╩╚═╚═╝╚═╝ ╩ ╚═╝
