@@ -4,11 +4,7 @@
             <v-container grid-list-xl fluid>
                 <loader :color="message.type" :message="message.message" :show="!connected" v-if="message.message && message.type=='error'"></loader>
                 <v-layout row wrap>
-                    <v-flex lg4 sm12 xs12>
-                        <base-card title="Liste des apis">
-                            <api-card ></api-card>
-                        </base-card>
-                    </v-flex>
+                    
                      <v-flex lg4 sm12 xs12>
                         <base-card :title="`${joueur.nom} ${joueur.prenom}`"  v-if="joueur">
                             <template v-slot:toolbar v-if="joueurParties.length>0">
@@ -37,15 +33,20 @@
                         </base-card>
                     </v-flex>
                     
-
-                    <v-flex lg4 sm12 xs12>
-                        <chart-histo-cla v-if="joueur" :licence="joueur.licence"></chart-histo-cla>
+                    
+                    <v-flex lg4 sm12 xs12 v-if="joueur">
+                        <chart-histo-cla  :licence="joueur.licence"></chart-histo-cla>
                     </v-flex>
-                    <v-flex lg4 sm12 xs12>
+                    <!--<v-flex lg4 sm12 xs12>
                         <chart-tendance v-if="joueur"  ></chart-tendance>
-                    </v-flex>
+                    </v-flex>-->
+                    <!--<v-flex lg4 sm12 xs12 v-if="joueur">
+                        <chart-resultat-mensuel  :licence="joueur.licence" ></chart-resultat-mensuel>
+                    </v-flex>-->
                     <v-flex lg4 sm12 xs12>
-                        <chart-resultat-mensuel v-if="joueur"  ></chart-resultat-mensuel>
+                        <base-card title="Liste des apis">
+                            <api-card ></api-card>
+                        </base-card>
                     </v-flex>
                 </v-layout>
                

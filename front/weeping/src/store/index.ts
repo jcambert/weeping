@@ -43,9 +43,136 @@ export interface IHistorique {
     histo?:Array<any>
     detail?:{}
 }
+
+export interface IJoueurPartie{
+    advclaof:number
+    advlic:string
+    advnompre:string
+    advsexe:string
+    codechamp:string
+    coefchamp:number
+    date:string
+    idpartie:string
+    licence:string
+    mois:number
+    moisannee:number
+    numjour:string
+    pointres:number
+    vd:string
+}
+export interface IJoueur{
+    club:string,
+    echelon:string,
+    licence:string,
+    nclub:string,
+    nom:string,
+    place:string,
+    point:number,
+    prenom:string,
+    sexe:string,
+    parties_mysql:Array<IJoueurPartie>
+    historiqueClassement:{}
+    readonly hasPartiesMySql:boolean
+    readonly hasHistoriqueClassement:boolean
+    readonly classement:number
+    readonly partiesDefaitesAnormales:IJoueurPartie[]
+    readonly partiesDefaiteNormales:IJoueurPartie[]
+    readonly partiesVictoiresAnormales:IJoueurPartie[]
+    readonly partiesVictoiresNormales:IJoueurPartie[]
+    readonly partiesMensuelNombreVD:any
+    readonly partiesPointsVD:any
+
+}
+class Joueur implements IJoueur{
+    club:string=""
+    echelon:string=""
+    licence:string=""
+    nclub:string=""
+    nom:string=""
+    place:string=""
+    point:number=0
+    prenom:string=""
+    sexe:string=""
+    private parties_mysql_:Array<IJoueurPartie>=[]
+    historiqueClassement={}
+    constructor(payload:IJoueur){
+        _.extend(this,payload)
+    }
+
+    set parties_mysql(parties:Array<IJoueurPartie>){
+        this.parties_mysql_=parties
+    }
+    get parties_mysql():Array<IJoueurPartie>{
+        return this.parties_mysql_
+    }
+    get hasPartiesMySql():boolean{
+        return this.parties_mysql.length>0
+    }
+    get classement():number{
+        return Math.trunc( this.point/100)
+    }
+    get hasHistoriqueClassement():boolean{
+        return Object.keys(this.historiqueClassement).length>0
+    }
+    get partiesDefaitesAnormales():IJoueurPartie[]{
+        return _.filter(this.parties_mysql,partie=>partie.advclaof<this.classement && partie.vd=="D")
+    }
+
+    get partiesDefaiteNormales():IJoueurPartie[]{
+        return _.filter(this.parties_mysql,partie=>partie.advclaof>=this.classement && partie.vd=="D")
+    }
+
+    get partiesVictoiresAnormales():IJoueurPartie[]{
+        return _.filter(this.parties_mysql,partie=>partie.advclaof>this.classement && partie.vd=="V")
+    }
+
+    get partiesVictoiresNormales():IJoueurPartie[]{
+        return _.filter(this.parties_mysql,partie=>partie.advclaof<=this.classement && partie.vd=="V")
+    }
+    get partiesMensuelNombreVD():any{
+        var res:Array<{}>=[]
+        
+        var fn=function(ar){
+            var aa=_.groupBy( ar,p=>p.moisannee)
+            _.forEach(aa,(a:any,index)=>{
+                //console.log(a.length)
+                aa[index]=a.length
+            })
+            return aa
+        }
+
+
+        
+        var min= _.minBy(this.parties_mysql,p=>p.moisannee)!['moisannee']
+        var max= _.maxBy(this.parties_mysql,p=>p.moisannee)!['moisannee']
+
+        var ret= {min:min,max:max,
+            'Victoire A.': fn(this.partiesVictoiresAnormales),
+            'Victoire N.':fn(this.partiesVictoiresNormales),
+            'Defaite N.':fn( this.partiesDefaiteNormales),
+            'Defaite A.':fn(this.partiesDefaitesAnormales)
+        }
+       
+        return ret
+    }
+
+    get partiesPointsVD():any{
+        var res:Array<{}>=[]
+        res.push({name:'Points Vict A.',value:Math.abs( _.reduce(_.map(this.partiesVictoiresAnormales,'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Vict N.',value:Math.abs(_.reduce(_.map(this.partiesVictoiresNormales,'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Def N.',value:Math.abs(_.reduce(_.map(this.partiesDefaiteNormales,'pointres'),(a,b)=>a+b,0))})
+        res.push({name:'Points Def A.',value:Math.abs(_.reduce(_.map(this.partiesDefaitesAnormales,'pointres'),(a,b)=>a+b,0))})
+        
+        return res
+    }
+}
+export interface Joueurs{
+    [key: string]: IJoueur;
+}
 @Module({ dynamic: true, store:store,name:'app'})
  class ApplicationStore extends VuexModule /*implements IAppState*/{
-     
+    joueurs__:Joueurs={}
+
     user_: User | undefined=undefined
     userinfo_: UserInfo |undefined=undefined
     clubinfo_:ClubInfo | undefined=undefined
@@ -166,6 +293,7 @@ export interface IHistorique {
     SET_USER(value:User){
         //console.log('set new user',value)
         this.user_=value
+        
     }
 
     @Action({commit:'SET_USER'})
@@ -177,7 +305,23 @@ export interface IHistorique {
     public get user():User|undefined{
         return this.user_
     }
-   
+    
+    @Mutation
+    ADD_JOUEUR(joueur:any){
+        this.joueurs__[joueur.licence]=new Joueur(joueur)
+        
+    }
+    @Action({commit:'ADD_JOUEUR'})
+    public addJoueur(joueur:IJoueur){
+        //console.log(joueur)
+        return joueur
+    }
+
+    get joueursTT():Joueurs{
+        return this.joueurs__
+    }
+
+
     @Mutation
     SET_USERINFO(value:UserInfo){
         this.userinfo_=value
@@ -204,12 +348,12 @@ export interface IHistorique {
         window.spid.login(payload.licence,payload.prenom)
         .then((resp:any)=>{
             this.context.commit('SET_LOADING',false)
-            this.context.commit('SET_USER',resp.licencie);
-            this.context.commit('SET_USERINFO',resp.info);
+            this.context.commit('SET_USER',resp.licencie)
+            this.context.commit('ADD_JOUEUR',resp.licencie)
+            this.context.commit('SET_USERINFO',resp.info)
             //console.log(resp);
             //console.log("YOU ARE LOGGED");
             window.getApp.$emit('APP_LOGIN_SUCCESS',resp);
-            
         })
         .catch(error=>{
            // console.log(error);
@@ -616,7 +760,7 @@ export interface IHistorique {
             
         })
         .catch(error=>{
-            console.log(error)
+            //console.log(error)
             this.context.commit('SET_LOADING',false)
         })
     }
@@ -627,8 +771,10 @@ export interface IHistorique {
 
     @Mutation
     SET_HISTO_CLA(payload:any){
-        //console.log(payload)
-        this.histo_cla_=payload
+        console.log(payload)
+        this.histo_cla_=payload.histo
+
+        this.joueurs__[payload.licence].historiqueClassement=payload.histo
     }
 
 
@@ -638,27 +784,29 @@ export interface IHistorique {
 
     @Action({})
     getJoueurHistoriqueClassement(payload:any){
+        if(this.joueursTT[payload.licence].hasHistoriqueClassement && !payload.force)return
         this.context.commit('SET_LOADING',true)
         this.context.commit('SET_LOADER',{joueurhistocla:true})
-        this.context.commit('SET_HISTO_CLA',{})
+        this.context.commit('SET_HISTO_CLA',{histo:{}, licence:payload.licence})
         window.spid.joueurHistoriqueClassement(payload)
             .then((resp:any)=>{
                
                 window.spid.joueurDetail(payload).then((r:any)=>{
                     resp.detail=r
-                    this.context.commit('SET_HISTO_CLA',resp)
+                    console.log(resp)
+                    this.context.commit('SET_HISTO_CLA',{histo:resp,licence:payload.licence})
                     this.context.commit('SET_LOADER',{joueurhistocla:false})
                     this.context.commit('SET_LOADING',false)
                 })
                 .catch(error=>{
-                    console.log(error)
+                   // console.log(error)
                     this.context.commit('SET_LOADING',false)                    
                     this.context.commit('SET_LOADER',{joueurhistocla:true})
                 })
 
             })
             .catch(error=>{
-                console.log(error)
+                //console.log(error)
                 this.context.commit('SET_LOADING',false)
                 this.context.commit('SET_LOADER',{joueurhistocla:true})
             })
@@ -678,13 +826,15 @@ export interface IHistorique {
         })
         this.joueur_parties_mysql_[ payload.licence]=payload.parties
         //this.joueur_parties_mysql_=payload
-        this.calculatePartiesDefaitesAnormales(payload.licence)
+        /*this.calculatePartiesDefaitesAnormales(payload.licence)
         this.calculatePartiesDefaiteNormales(payload.licence)
         this.calculatePartiesVictoiresAnormales(payload.licence)
         this.calculatePartiesVictoiresNormales(payload.licence)
         this.calculatePartieMensuelNombreVD(payload.licence)
         this.calculatePartiesNombreVD(payload.licence)
-        this.calculatePartiesPointsVD(payload.licence)
+        this.calculatePartiesPointsVD(payload.licence)*/
+
+        this.joueurs__[payload.licence].parties_mysql=payload.parties
     }
 
     get joueurPartiesMysql(){
@@ -692,9 +842,8 @@ export interface IHistorique {
     }
     @Action({})
     getJoueurPartiesMysql(payload:any){
-        if(!payload.licence && this.joueur){
-            payload.licence=this.joueur.licence
-        }
+
+        if(this.joueursTT[payload.licence].hasPartiesMySql && !payload.force)return
 
         this.context.commit('SET_JOUEUR_PARTIES_MYSQL',{licence:payload.licence,parties:[]})
         this.context.commit('SET_LOADING',true)
@@ -704,13 +853,12 @@ export interface IHistorique {
             .then((resp:any)=>{
                 resp.licence=payload.licence
                 this.context.commit('SET_JOUEUR_PARTIES_MYSQL',{parties:resp.partie,licence:resp.licence})
-                
                 this.context.commit('SET_LOADING',false)
                 this.context.commit('SET_LOADER',{joueurpartiesmysql:false})
 
             })
             .catch(error=>{
-                console.log(error)
+                //console.log(error)
                 this.context.commit('SET_LOADING',false)
                 this.context.commit('SET_LOADER',{joueurpartiesmysql:false})
             })
@@ -816,10 +964,6 @@ export interface IHistorique {
         return  0
     }
 }
-class Joueur{
-    constructor(){
-        
-    }
-}
+
 
  export default store;

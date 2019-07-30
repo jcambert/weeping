@@ -179,6 +179,7 @@ export default {
 
   },
   methods: {
+    
     init () {
       const { widthChangeDelay } = this;
       // set 
@@ -189,7 +190,7 @@ export default {
         });
       }
       this.chartInstance = ECharts.init(this.$refs.canvas, 'material');
-      console.log(_object.merge({}, this.$data._defaultOption,this.option))
+      //console.log(_object.merge({}, this.$data._defaultOption,this.option))
       this.chartInstance.setOption(_object.merge({}, this.$data._defaultOption,this.option));
       window.addEventListener('optimizedResize', (e) => {
         setTimeout(_ => {

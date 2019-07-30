@@ -1,13 +1,13 @@
 <template>
     <v-widget title="Historique classement" content-bg="white">
         <template slot="widget-header-action">
-            <v-btn icon @click="refresh" :disabled="refreshing" :loading="refreshing">
+            <v-btn icon @click="refresh(true)" :disabled="refreshing" :loading="refreshing">
                 <v-icon class="text--secondary">refresh</v-icon>
             </v-btn>
 
         </template>
         <div slot="widget-content">
-            <e-chart v-if="Object.keys(histo).length>0"
+            <e-chart 
                 :path-option="[
                 ['title.text',''],
                 ['legend.data',['Points']],
@@ -46,7 +46,16 @@ import echart from '@/components/chart/echart';
     },
     watch:{
         licence:function(newv){
-            this.$store.dispatch('getJoueurHistoriqueClassement',{licence:newv})
+            this.$store.dispatch('getJoueurHistoriqueClassement',{licence:newv,force:true})
+        },
+        histo:function(newv){
+            console.log('histo has changed')
+        },
+        joueur:{
+            handler:function(newu){
+                console.log('joueur has changed')
+            },
+            deep:true
         }
     }
 })
@@ -56,8 +65,12 @@ export default class ChartHistoCla extends Vue{
         //console.log('refreshing ',res)
         return res
     }
+    get joueur(){
+        return this.$store.getters.joueursTT[this.licence]
+    }
+
     get histo(){
-        return this.$store.getters.joueurHistoriqueClassement
+        return this.joueur.historiqueClassement
     }
     get xAxisData(){
         
@@ -72,7 +85,7 @@ export default class ChartHistoCla extends Vue{
             var last=_.last(this.histo.histo)
             res.push( (last.phase=="2"?"Juil ":"Janv ").concat(last.phase=="2"?ss[1]:ss[3]))
         }
-        //console.log(res)
+        console.log(res)
         return res;
     }
     get seriesData(){
@@ -83,16 +96,16 @@ export default class ChartHistoCla extends Vue{
         if(this.histo.detail){
             res.push(this.histo.detail.licence.point)
         }
-        //console.log(res)
+        console.log(res)
         return res
     }
    
-   get min(){
-       return _.min(this.seriesData)-10
-   }
-    refresh(){
-        if(this.licence)
-            this.$store.dispatch('getJoueurHistoriqueClassement',{licence:this.licence})
+    get min(){
+        return _.min(this.seriesData)-10
+    }
+
+    refresh(force=false){
+        this.$store.dispatch('getJoueurHistoriqueClassement',{licence:this.licence,force:force})
     }
     mounted(){
         this.refresh()

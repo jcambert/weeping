@@ -1,7 +1,7 @@
 <template>
     <v-widget title="Resultats Mensuels" content-bg="white">
         <template slot="widget-header-action">
-            <v-btn icon @click="refresh" :disabled="refreshing" :loading="refreshing">
+            <v-btn icon @click="refresh(true)" :disabled="refreshing" :loading="refreshing">
                 <v-icon class="text--secondary">refresh</v-icon>
             </v-btn>
 
@@ -69,7 +69,7 @@
                 ]"
              
             >
-            </e-chart>   {{dataSeries}}
+            </e-chart>
         </div>
     </v-widget>
 </template>
@@ -86,10 +86,15 @@ import echart from '@/components/chart/echart';
         'e-chart':echart
     },
     props:{
-
+        licence:{
+            type:String,
+            required:true
+        }
     },
     watch:{
-      
+      licence:function(newv){
+            this.$store.dispatch('getJoueurHistoriqueClassement',{licence:newv,force:true})
+        }
     }
 })
 export default class ChartResultatMensuel extends Vue{
@@ -124,29 +129,25 @@ export default class ChartResultatMensuel extends Vue{
         return {xaxisdata:xaxisdata,sets:sets}
     }
 
+    get joueur(){
+        return this.$store.getters.joueursTT[this.licence]
+    }
     
     get parties(){
-        return this.$store.getters.joueurPartiesMysql
+        return this.joueur.parties_mysql
     }
     get refreshing(){
         return this.$store.getters.loaders.joueurpartiesmysql
     }
 
-    get licence(){
-        if(this.$store.getters.joueur)
-            return this.$store.getters.joueur.licence
-        return "905821"
-    }
-
     get dataSeries(){
-        return this.$store.getters.PartieMensuelNombreVD
+        return this.joueur.partiesMensuelNombreVD
     }
-    refresh(){
-        if(this.licence)
-            this.$store.dispatch('getJoueurPartiesMysql',{licence:this.licence})
+    refresh(force=false){
+        this.$store.dispatch('getJoueurPartiesMysql',{licence:this.licence,force:force})
     }
-    mounted(){
-        //this.refresh()
+    mounted(){ 
+        this.refresh()
     }
 }
 </script>
