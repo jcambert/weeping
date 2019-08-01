@@ -16,7 +16,7 @@
                             <joueur-card  :joueur="joueur" :parties="joueurParties"></joueur-card>
                         </base-card>
                     </v-flex>
-                    <v-flex lg4 sm12 xs12>
+                    <!--<v-flex lg4 sm12 xs12>
                         <base-card :title="club.nom"  v-if="club" >
                             <club-card :club="club" :load-joueurs="true" ></club-card>
                         </base-card>
@@ -31,23 +31,23 @@
                         <base-card :title="`Classement ${clt.division}`"   :moreable="true" >
                             <classement-equipes-card :classement="clt.classement" ></classement-equipes-card>
                         </base-card>
-                    </v-flex>
+                    </v-flex>-->
                     
                     
                     <v-flex lg4 sm12 xs12 v-if="joueur">
                         <chart-histo-cla  :licence="joueur.licence"></chart-histo-cla>
                     </v-flex>
-                    <!--<v-flex lg4 sm12 xs12>
-                        <chart-tendance v-if="joueur"  ></chart-tendance>
+                    <!--<v-flex lg4 sm12 xs12 v-if="joueur">
+                        <chart-tendance  :licence="joueur.licence" ></chart-tendance>
                     </v-flex>-->
                     <!--<v-flex lg4 sm12 xs12 v-if="joueur">
                         <chart-resultat-mensuel  :licence="joueur.licence" ></chart-resultat-mensuel>
                     </v-flex>-->
-                    <v-flex lg4 sm12 xs12>
+                    <!--<v-flex lg4 sm12 xs12>
                         <base-card title="Liste des apis">
                             <api-card ></api-card>
                         </base-card>
-                    </v-flex>
+                    </v-flex>-->
                 </v-layout>
                
             </v-container>

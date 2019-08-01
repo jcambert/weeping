@@ -90,7 +90,8 @@ export default {
     widthChangeDelay: {
       type: Number,
       default: 450
-    }
+    },
+    options:{}
   },
   data: () => ({
     chartInstance: null,
@@ -199,7 +200,10 @@ export default {
       });      
     },
 
-
+    setOptions(opt){
+      console.log('new data option comes ',opt)
+      this.chartInstance.setOption(_object.merge({},this._defaultOption,opt));
+    },
     resize () {
       this.chartInstance.resize();
     },
@@ -216,5 +220,12 @@ export default {
   beforeDestroy () {
     if (ECharts != undefined)
         this.clean();
+  },
+  watch:{
+    options:function(newv){
+      console.log('new options')
+      this.setOptions(newv)
+    }
   }
+
 };

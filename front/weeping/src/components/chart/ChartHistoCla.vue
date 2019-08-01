@@ -7,17 +7,13 @@
 
         </template>
         <div slot="widget-content">
-            <e-chart 
+            <e-chart ref="chart"  :options="options"
                 :path-option="[
                 ['title.text',''],
                 ['legend.data',['Points']],
                 ['xAxis',{data:xAxisData}],
                 ['yAxis.min',min],
-                ['series',[{
-                    name: 'Points',
-                    type: 'line',
-                    data: seriesData
-                }]]
+                
                 ]"
             
             >
@@ -33,33 +29,46 @@ import Vue from 'vue'
 import Component from "vue-class-component";
 import widget from '@/components/widget.vue';
 import echart from '@/components/chart/echart';
+import calc from '@/components/mixins/calculParties';
 @Component({
     components:{
         'v-widget':widget,
         'e-chart':echart
     },
+    mixins:[calc],
     props:{
-        licence:{
-            type:String,
-            required:true
-        }
+       
     },
     watch:{
         licence:function(newv){
             this.$store.dispatch('getJoueurHistoriqueClassement',{licence:newv,force:true})
         },
         histo:function(newv){
-            console.log('histo has changed')
+           // console.log('histo has changed')
         },
-        joueur:{
-            handler:function(newu){
-                console.log('joueur has changed')
-            },
-            deep:true
+        refreshing:function(newv){
+            console.log(newv)
+            if(newv){
+                this.options=
+                    {'series':
+                        [
+                            {
+                                name: 'Points',
+                                type: 'line',
+                                data: this.seriesData
+                            }
+                        ],
+                        'xAxis':{data:this.xAxisData},
+                        'yAxis':{min:this.min}
+                    }
+            }
+
         }
+
     }
 })
 export default class ChartHistoCla extends Vue{
+    options={}
     get refreshing(){
         var res= this.$store.getters.loaders.joueurhistocla
         //console.log('refreshing ',res)
@@ -69,15 +78,18 @@ export default class ChartHistoCla extends Vue{
         return this.$store.getters.joueursTT[this.licence]
     }
 
+    get parties(){
+        return this.$store.getters.joueurPartiesMysql[this.licence]
+    }
+
     get histo(){
-        return this.joueur.historiqueClassement
+        return this.$store.getters.joueurHistoriqueClassement[this.licence]
     }
     get xAxisData(){
-        
+        if(!this.histo)return
         var res=[]
         var ss
         _.forEach(this.histo.histo,h=>{
-            
             ss=h.saison.split(' ')
             res.push( (h.phase =="1"?"Juil ":"Janv ").concat(h.phase=="1"?ss[1]:ss[3]))
         })
@@ -89,6 +101,7 @@ export default class ChartHistoCla extends Vue{
         return res;
     }
     get seriesData(){
+        if(!this.histo)return
         var res=[]
         _.forEach(this.histo.histo,h=>{
             res.push(h.point)
@@ -96,11 +109,11 @@ export default class ChartHistoCla extends Vue{
         if(this.histo.detail){
             res.push(this.histo.detail.licence.point)
         }
-        console.log(res)
         return res
     }
    
     get min(){
+        if(!this.histo)return 0
         return _.min(this.seriesData)-10
     }
 
