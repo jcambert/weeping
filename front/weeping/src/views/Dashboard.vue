@@ -35,14 +35,14 @@
                     
                     
                     <v-flex lg4 sm12 xs12 v-if="joueur">
-                        <chart-histo-cla  :licence="joueur.licence"></chart-histo-cla>
+                        <chart-histo-cla  :licence="joueur.licence" :points="parseInt(joueur.point)"></chart-histo-cla>
                     </v-flex>
-                    <!--<v-flex lg4 sm12 xs12 v-if="joueur">
-                        <chart-tendance  :licence="joueur.licence" ></chart-tendance>
-                    </v-flex>-->
-                    <!--<v-flex lg4 sm12 xs12 v-if="joueur">
-                        <chart-resultat-mensuel  :licence="joueur.licence" ></chart-resultat-mensuel>
-                    </v-flex>-->
+                    <v-flex lg4 sm12 xs12 v-if="joueur">
+                        <chart-tendance  :licence="joueur.licence" :points="parseInt(joueur.point)"></chart-tendance>
+                    </v-flex>
+                    <v-flex lg4 sm12 xs12 v-if="joueur">
+                        <chart-resultat-mensuel  :licence="joueur.licence" :points="parseInt(joueur.point)" ></chart-resultat-mensuel>
+                    </v-flex>
                     <!--<v-flex lg4 sm12 xs12>
                         <base-card title="Liste des apis">
                             <api-card ></api-card>

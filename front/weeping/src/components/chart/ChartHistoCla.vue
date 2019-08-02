@@ -78,10 +78,6 @@ export default class ChartHistoCla extends Vue{
         return this.$store.getters.joueursTT[this.licence]
     }
 
-    get parties(){
-        return this.$store.getters.joueurPartiesMysql[this.licence]
-    }
-
     get histo(){
         return this.$store.getters.joueurHistoriqueClassement[this.licence]
     }
@@ -121,7 +117,7 @@ export default class ChartHistoCla extends Vue{
         this.$store.dispatch('getJoueurHistoriqueClassement',{licence:this.licence,force:force})
     }
     mounted(){
-        this.refresh()
+       // this.refresh()
     }
 }
 </script>

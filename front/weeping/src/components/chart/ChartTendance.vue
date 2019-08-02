@@ -106,14 +106,10 @@ export default class ChartTendance extends Vue{
     }
 
     refresh(force=false){
-        var opt={}
-        if(this.licence.length>0)
-            opt.licence=this.licence
-        opt.force=force
-        this.$store.dispatch('getJoueurPartiesMysql',opt)
+        this.$store.dispatch('getJoueurPartiesMysql',{licence:this.licence,force:force})
     }
     mounted(){
-        this.refresh()
+        //this.refresh()
     }
 }
 </script>

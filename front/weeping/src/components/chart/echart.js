@@ -202,7 +202,7 @@ export default {
 
     setOptions(opt){
       console.log('new data option comes ',opt)
-      this.chartInstance.setOption(_object.merge({},this._defaultOption,opt));
+      this.chartInstance.setOption(_object.merge({},this._defaultOption,opt),true);
     },
     resize () {
       this.chartInstance.resize();

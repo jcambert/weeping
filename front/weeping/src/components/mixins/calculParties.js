@@ -49,32 +49,32 @@ var calculatePartieMensuelNombreVD=function(parties,pva,pvn,pda,pdn){
 }
 
 
-var calculatePartiesVictoiresNormales=function(parties){
-    var res=_.filter(parties,partie=>partie.advclaof<=this.classement && partie.vd=="V")
+var calculatePartiesVictoiresNormales=function(parties,points){
+    var res=_.filter(parties,partie=>partie.advclaof<=classement( points) && partie.vd=="V")
     return res
 }
 
 
-var calculatePartiesVictoiresAnormales=function(parties){
-    var res=_.filter(parties,partie=>partie.advclaof>this.classement && partie.vd=="V")
+var calculatePartiesVictoiresAnormales=function(parties,points){
+    var res=_.filter(parties,partie=>partie.advclaof>classement( points) && partie.vd=="V")
     return res
 }
 
 
-var calculatePartiesDefaitesNormales=function(parties){
-    var res=_.filter(parties,partie=>partie.advclaof>=this.classement && partie.vd=="D")
+var calculatePartiesDefaitesNormales=function(parties,points){
+    var res=_.filter(parties,partie=>partie.advclaof>=classement( points) && partie.vd=="D")
     return res
 }
 
-var calculatePartiesDefaitesAnormales=function(parties){
-    var res=_.filter(parties,partie=>partie.advclaof<this.classement && partie.vd=="D")
+var calculatePartiesDefaitesAnormales=function(parties,points){
+    var res=_.filter(parties,partie=>partie.advclaof<classement( points) && partie.vd=="D")
     return res
 }
 
 
 
-var classement=function(point){
-    var c=parseInt(this.point)
+var classement=function(points){
+    var c=parseInt(points)
     return Math.trunc(c/100)
 }
 
@@ -83,7 +83,12 @@ export default {
         licence:{
             type:String,
             required:true
+        },
+        points:{
+            type:Number,
+            required:true
         }
+
     },
     data:()=>{
         return {
@@ -98,16 +103,16 @@ export default {
             return this.$store.getters.joueurPartiesMysql[this.licence]
         },*/
         partiesDefaiteNormales(){
-            return calculatePartiesDefaitesNormales(this.parties)
+            return calculatePartiesDefaitesNormales(this.parties,this.points)
         },
         partiesDefaitesAnormales(){
-            return calculatePartiesDefaitesAnormales(this.parties)
+            return calculatePartiesDefaitesAnormales(this.parties,this.points)
         },
         partiesVictoiresNormales(){
-            return calculatePartiesVictoiresNormales(this.parties)
+            return calculatePartiesVictoiresNormales(this.parties,this.points)
         },
         partiesVictoiresAnormales(){
-            return calculatePartiesVictoiresAnormales(this.parties)
+            return calculatePartiesVictoiresAnormales(this.parties,this.points)
         },
         partiesMensuelNombreVD(){
             return calculatePartieMensuelNombreVD(

@@ -10,7 +10,7 @@
             <e-chart v-if="parties.length>0"
                 :path-option="[
                     ['xAxis.type','category'],
-                    ['xAxis.data',datas.xaxisdata],
+                   
                     ['yAxis.type','value'],
                     ['legend.data',['Victoire A.','Victoire N.','Defaite N.','Defaite A.',]],
                     ['tooltip',{
@@ -21,51 +21,7 @@
                             }
                         },
                     }],
-                    ['series',[
-                        {
-                            name:'Victoire A.',
-                            type:'bar',
-                            stack:'a',
-                            color:'#0F0',
-                            label: {
-                                show: true,
-                                color:'#000'
-                            },
-                            data: datas.sets['Victoire A.']
-                        },
-                        {
-                            name:'Victoire N.',
-                            type:'bar',
-                            stack: 'a',
-                            color:'#080',
-                            label: {
-                                    show: true,
-                            },
-                            data:datas.sets['Victoire N.']
-                        },
-                        {
-                            name:'Defaite N.',
-                            type:'bar',
-                            stack: 'a',
-                            color:'#800',
-                            label: {
-                                show: true,
-                            },
-                            data:datas.sets['Defaite N.']
-                        },
-                        {
-                            name:'Defaite A.',
-                            type:'bar',
-                            stack: 'a',
-                            color:'#f00',
-                            label: {
-                                    show: true,
-                                    
-                                
-                            },
-                            data:datas.sets['Defaite A.']
-                        },              
-                    ]]
+                    
                 ]"
              
             >
@@ -79,30 +35,90 @@ import Vue from 'vue'
 import Component from "vue-class-component";
 import widget from '@/components/widget.vue';
 import echart from '@/components/chart/echart';
-
+import calc from '@/components/mixins/calculParties';
 @Component({
     components:{
         'v-widget':widget,
         'e-chart':echart
     },
+    mixins:[calc],
     props:{
-        licence:{
-            type:String,
-            required:true
-        }
+        
     },
     watch:{
       licence:function(newv){
             this.$store.dispatch('getJoueurHistoriqueClassement',{licence:newv,force:true})
+        },
+        refreshing:function(newv){
+            this.options={
+                'xAxis':{
+                        data:null,
+                    },
+                'series':null
+            };
+            if(newv){
+                this.options={
+                    'xAxis':{
+                        data:this.datas.xaxisdata,
+                    },
+                    'series':[
+                        {
+                            name:'Victoire A.',
+                            type:'bar',
+                            stack:'a',
+                            color:'#0F0',
+                            label: {
+                                show: true,
+                                color:'#000'
+                            },
+                            data: this.datas.sets['Victoire A.']
+                        },
+                        {
+                            name:'Victoire N.',
+                            type:'bar',
+                            stack: 'a',
+                            color:'#080',
+                            label: {
+                                    show: true,
+                            },
+                            data:this.datas.sets['Victoire N.']
+                        },
+                        {
+                            name:'Defaite N.',
+                            type:'bar',
+                            stack: 'a',
+                            color:'#800',
+                            label: {
+                                show: true,
+                            },
+                            data:this.datas.sets['Defaite N.']
+                        },
+                        {
+                            name:'Defaite A.',
+                            type:'bar',
+                            stack: 'a',
+                            color:'#f00',
+                            label: {
+                                    show: true,
+                                    
+                                
+                            },
+                            data:this.datas.sets['Defaite A.']
+                        },              
+                    ]
+                }
+            }
         }
     }
 })
 export default class ChartResultatMensuel extends Vue{
     months=['','Jan','Fev','Mar','Avr','Mai','Juin','Juil','Aout','Sept','Oct','Nov','Dec']
+    options={}
     get datas(){
         var xaxisdata=[]
         var sets={'Victoire A.':[],'Victoire N.':[],'Defaite N.':[],'Defaite A.':[]}
         var d=this.dataSeries
+        console.log(d)
         var month=function(d){
             var ras=parseInt( (d+"").substring(2))
             return ras
@@ -132,16 +148,17 @@ export default class ChartResultatMensuel extends Vue{
     get joueur(){
         return this.$store.getters.joueursTT[this.licence]
     }
-    
+
     get parties(){
-        return this.joueur.parties_mysql
+        return this.$store.getters.joueurPartiesMysql[this.licence]
     }
+
     get refreshing(){
         return this.$store.getters.loaders.joueurpartiesmysql
     }
 
     get dataSeries(){
-        return this.joueur.partiesMensuelNombreVD
+        return this.partiesMensuelNombreVD(this.points)
     }
     refresh(force=false){
         this.$store.dispatch('getJoueurPartiesMysql',{licence:this.licence,force:force})
