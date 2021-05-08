@@ -18,7 +18,7 @@
     "firebase": "^5.9.2",
     "firebase-admin": "^7.2.0",
     "font-awesome": "^4.7.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "roboto-fontface": "^0.10.0",
     "sails.io.js-dist": "^1.0.0",
